@@ -1,0 +1,13 @@
+command.c
+command.h
+command.o
+main.c
+main.o
+makefile
+newfile
+smallsh
+theotherfile
+therightfile
+utilities.c
+utilities.h
+utilities.o
