@@ -138,15 +138,15 @@ struct command *build_prelim_command(char** inputs, int *n_inputs) {
     curr_command->arg_count = arg_count;
 
     // need (arg_count + 1) elements so we can have NULL as final array element 
-    char** args = malloc(arg_count * sizeof(char*));
+    // char** args = malloc(arg_count * sizeof(char*));
    
     for (index = 0; index < arg_count; index++) {
-        args[index] = calloc(strlen(inputs[index]), sizeof(char));
-        strcpy(args[index], inputs[index]);
+        curr_command->args[index] = calloc(strlen(inputs[index]), sizeof(char));
+        strcpy(curr_command->args[index], inputs[index]);
     }
     
-    args[arg_count] = NULL;
-    curr_command->args = args;
+    curr_command->args[arg_count] = NULL;
+    // curr_command->args = args;
     
     return curr_command;
 }
@@ -154,21 +154,21 @@ struct command *build_prelim_command(char** inputs, int *n_inputs) {
 void free_command(struct command* curr_command) {
     
     if (curr_command != NULL) {
-        // for (int index = curr_command->arg_count; index >= 0; index--) {
-        //     if (curr_command->args[index] != NULL){
-        //         free(curr_command->args[index]);
-        //     }  
-        // }
+        for (int index = 0; index < MAX_ARGS; index++) {
+            if (curr_command->args[index] != NULL){
+                free(curr_command->args[index]);
+            }  
+        }
         // if (curr_command->args != NULL)
         // {
         //     free(curr_command->args);
         // }
-        // if (curr_command->input_redirect != NULL) {
-        //     free(curr_command->input_redirect);
-        // }
-        // if (curr_command->output_redirect != NULL) {
-        //     free(curr_command->output_redirect);
-        // }       
+        if (curr_command->input_redirect != NULL) {
+            free(curr_command->input_redirect);
+        }
+        if (curr_command->output_redirect != NULL) {
+            free(curr_command->output_redirect);
+        }       
 
         free(curr_command);
     }

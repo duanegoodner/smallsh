@@ -12,7 +12,7 @@
 struct command
 {
     int arg_count;
-    char **args;
+    char *args[MAX_ARGS];
     char *input_redirect;
     char *output_redirect;
     bool background;
