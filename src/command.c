@@ -109,6 +109,8 @@ struct command *build_prelim_command(char** inputs, int *n_inputs) {
     curr_command->process_id = -5;  // initialize to "safe" val. this mimics example at:
     // https://repl.it/@cs344/51zombieexc 
 
+    curr_command->input_redirect = NULL;
+    curr_command->output_redirect = NULL;
 
 
     // check if curr_command is intended to run in background
@@ -154,7 +156,7 @@ struct command *build_prelim_command(char** inputs, int *n_inputs) {
 void free_command(struct command* curr_command) {
     
     if (curr_command != NULL) {
-        for (int index = 0; index < MAX_ARGS; index++) {
+        for (int index = 0; index < curr_command->arg_count; index++) {
             if (curr_command->args[index] != NULL){
                 free(curr_command->args[index]);
             }  
