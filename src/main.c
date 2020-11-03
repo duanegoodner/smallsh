@@ -24,8 +24,6 @@
 
 #define NEWLINE "\n"
 
-// TO DO: add fflush() after every print statement
-
 
 struct command *bg_list_head = NULL;
 struct command *bg_list_tail = NULL;

@@ -1,0 +1,199 @@
+PRE-SCRIPT INFO
+  Grading Script PID: 10170
+  Note: your smallsh will report a different PID when evaluating $$
+: BEGINNING TEST SCRIPT
+: 
+: --------------------
+: Using comment (5 points if only next prompt is displayed next)
+: : 
+: 
+: --------------------
+: ls (10 points for returning dir contents)
+: command.c
+command.h
+command.o
+junk
+junk2
+main.c
+main.o
+makefile
+mytestresults
+newfile
+p3testscript
+smallsh
+theotherfile
+therightfile
+utilities.c
+utilities.h
+utilities.o
+: 
+: 
+: --------------------
+: ls out junk
+: : 
+: 
+: --------------------
+: cat junk (15 points for correctly returning contents of junk)
+: command.c
+command.h
+command.o
+junk
+junk2
+main.c
+main.o
+makefile
+mytestresults
+newfile
+p3testscript
+smallsh
+theotherfile
+therightfile
+utilities.c
+utilities.h
+utilities.o
+: 
+: 
+: --------------------
+: wc in junk (15 points for returning correct numbers from wc)
+:  17  17 169
+: 
+: 
+: --------------------
+: wc in junk out junk2; cat junk2 (10 points for returning correct numbers from wc)
+: :  17  17 169
+: 
+: 
+: --------------------
+: test -f badfile (10 points for returning error value of 1, note extraneous &)
+: : The last foreground process exited normally with exit status 1
+: 
+: 
+: --------------------
+: wc in badfile (10 points for returning text error)
+: cannot open badfile for input
+: 
+: 
+: --------------------
+: badfile (10 points for returning text error)
+: badfile: no such file or directory
+: 
+: 
+: --------------------
+: sleep 100 background (10 points for returning process ID of sleeper)
+: background pid is 10224
+: 
+: 
+: --------------------
+: pkill -signal SIGTERM sleep (10 points for pid of killed process, 10 points for signal)
+: (Ignore message about Operation Not Permitted)
+: pkill: killing pid 2434 failed: Operation not permitted
+pkill: killing pid 2435 failed: Operation not permitted
+pkill: killing pid 6580 failed: Operation not permitted
+pkill: killing pid 6774 failed: Operation not permitted
+pkill: killing pid 6830 failed: Operation not permitted
+pkill: killing pid 6854 failed: Operation not permitted
+pkill: killing pid 6984 failed: Operation not permitted
+pkill: killing pid 7008 failed: Operation not permitted
+pkill: killing pid 7099 failed: Operation not permitted
+pkill: killing pid 8010 failed: Operation not permitted
+pkill: killing pid 8011 failed: Operation not permitted
+pkill: killing pid 8599 failed: Operation not permitted
+pkill: killing pid 8810 failed: Operation not permitted
+pkill: killing pid 9672 failed: Operation not permitted
+pkill: killing pid 9782 failed: Operation not permitted
+pkill: killing pid 9890 failed: Operation not permitted
+pkill: killing pid 9929 failed: Operation not permitted
+pkill: killing pid 9930 failed: Operation not permitted
+pkill: killing pid 10159 failed: Operation not permitted
+pkill: killing pid 10167 failed: Operation not permitted
+pkill: killing pid 11189 failed: Operation not permitted
+pkill: killing pid 11190 failed: Operation not permitted
+pkill: killing pid 22838 failed: Operation not permitted
+pkill: killing pid 22839 failed: Operation not permitted
+pkill: killing pid 29380 failed: Operation not permitted
+pkill: killing pid 29381 failed: Operation not permitted
+pkill: killing pid 29735 failed: Operation not permitted
+pkill: killing pid 29736 failed: Operation not permitted
+pkill: killing pid 37981 failed: Operation not permitted
+pkill: killing pid 37982 failed: Operation not permitted
+pkill: killing pid 59009 failed: Operation not permitted
+pkill: killing pid 59010 failed: Operation not permitted
+pkill: killing pid 62729 failed: Operation not permitted
+pkill: killing pid 62730 failed: Operation not permitted
+pkill: killing pid 63958 failed: Operation not permitted
+pkill: killing pid 63959 failed: Operation not permitted
+pkill: killing pid 65766 failed: Operation not permitted
+pkill: killing pid 65767 failed: Operation not permitted
+pkill: killing pid 65981 failed: Operation not permitted
+pkill: killing pid 65996 failed: Operation not permitted
+pkill: killing pid 66182 failed: Operation not permitted
+pkill: killing pid 66183 failed: Operation not permitted
+pkill: killing pid 66849 failed: Operation not permitted
+pkill: killing pid 66861 failed: Operation not permitted
+pkill: killing pid 74866 failed: Operation not permitted
+pkill: killing pid 74867 failed: Operation not permitted
+pkill: killing pid 91645 failed: Operation not permitted
+pkill: killing pid 91646 failed: Operation not permitted
+pkill: killing pid 99900 failed: Operation not permitted
+pkill: background pid killing pid 99901 failed10224: Operation not permitted is done: 
+terminated by signal pkill: 15killing pid 104025 failed
+: Operation not permitted
+pkill: killing pid 104026 failed: Operation not permitted
+pkill: killing pid 109283 failed: Operation not permitted
+pkill: killing pid 109284 failed: Operation not permitted
+pkill: killing pid 113128 failed: Operation not permitted
+pkill: killing pid 113129 failed: Operation not permitted
+pkill: killing pid 129236 failed: Operation not permitted
+pkill: killing pid 135855 failed: Operation not permitted
+pkill: killing pid 135856 failed: Operation not permitted
+pkill: killing pid 298581 failed: Operation not permitted
+pkill: killing pid 298582 failed: Operation not permitted
+pkill: killing pid 307298 failed: Operation not permitted
+pkill: killing pid 307299 failed: Operation not permitted
+pkill: killing pid 312052 failed: Operation not permitted
+pkill: killing pid 312109 failed: Operation not permitted
+pkill: killing pid 321409 failed: Operation not permitted
+pkill: killing pid 321421 failed: Operation not permitted
+pkill: killing pid 324548 failed: Operation not permitted
+: 
+: 
+: --------------------
+: sleep 1 background (10 pts for pid of bg ps when done, 10 for exit value)
+: background pid is 10242
+: background pid 10242 is done: exit value 0
+: : 
+: 
+: --------------------
+: pwd
+: /nfs/stak/users/goodnedu/CS344/assign03b/src
+: 
+: 
+: --------------------
+: cd
+: : 
+: 
+: --------------------
+: pwd (10 points for being in the HOME dir)
+: /nfs/stak/users/goodnedu
+: 
+: 
+: --------------------
+: mkdir testdir10171
+: : 
+: 
+: --------------------
+: cd testdir10171
+: : 
+: 
+: --------------------
+: pwd (5 points for being in the newly created dir)
+: /nfs/stak/users/goodnedu/testdir10171
+: --------------------
+: Testing foreground-only mode (20 points for entry & exit text AND ~5 seconds between times)
+: 
+Entering foreground-only mode (& is now ignored)
+: : Mon Nov  2 12:58:34 PST 2020
+: : Mon Nov  2 12:58:39 PST 2020
+: 
+Exiting foreground-only mode
+: : 
