@@ -20,8 +20,6 @@ struct command
     struct command *next;
 };
 
-
-
 struct command *get_command(char* expand_wc, char* expand_repl);
 char* get_input_line(void);
 char** parse_input_line(char *curr_line, int *n_inputs);

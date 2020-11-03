@@ -56,8 +56,6 @@ void redirect_input(char* new_in_path) {
     }
 }
 
-
-
 void get_fg_status(int child_status) {
     if (WIFEXITED(child_status)) {   // consider making status a member of command struct
             last_fg_endmsg = LAST_FG_EXITED;
@@ -68,9 +66,6 @@ void get_fg_status(int child_status) {
             last_fg_terminated = true;
         }
 }
-
-
-
 
 void force_report_last_fg_end(void) {
     printf("%s %d\n", last_fg_endmsg, last_fg_endsig);
@@ -209,8 +204,10 @@ int launch_child_proc(struct command* curr_command) {
         } else {
             curr_command->process_id = waitpid(curr_command->process_id, &child_status, 0);
             get_fg_status(child_status);
+            if (last_fg_terminated) {
+                force_report_last_fg_end();
+            }
             free_command(curr_command);
-
         }
     }
     

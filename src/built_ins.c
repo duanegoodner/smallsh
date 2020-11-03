@@ -38,9 +38,6 @@ int cd_bltin(struct command* cd_command) {
         chdir_return = chdir(cd_command->args[1]);
     }
 
-    // for testing only:
-    //char* new_dir = getcwd(NULL, 90);
-
     return 1;
 }
 

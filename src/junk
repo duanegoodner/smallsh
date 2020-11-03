@@ -4,6 +4,7 @@ built_ins.o
 command.c
 command.h
 command.o
+fg_term_force_report_moved-01
 globals.h
 junk
 junk2

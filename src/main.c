@@ -27,11 +27,7 @@ int main(void) {
     set_shell_sighandlers();
     
     while (run_flag) {
-     
-        if (last_fg_terminated) {
-            force_report_last_fg_end();
-        }
-
+           
         printf(C_PROMPT);
         fflush(stdout);  
         struct command *curr_command = get_command(V_EXP_REPLACE, shell_pid_str);
