@@ -22,7 +22,7 @@ signal_handling.c
 signal_handling.h
 signal_handling.o
 smallsh
-tes46137
+test_after_mem-check_merge
 tests
 utilities.c
 utilities.h
