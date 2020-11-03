@@ -7,11 +7,11 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <fcntl.h>
-#include "command.h"
-#include "utilities.h"
+// #include "command.h"
+// #include "utilities.h"
 #include "built_ins.h"
 #include "globals.h"
-#include "process_mgmt.c"
+// #include "process_mgmt.c"
 
 
 char *bltin_funct_names[] = {
@@ -54,7 +54,10 @@ int status_bltin(struct command* status_command) {
 
 int exit_bltin(struct command* exit_command) {
 
-    killall_bgprocs();
+    while (bg_list_head != NULL) {
+        kill(bg_list_head->process_id, SIGKILL);
+        bg_list_head = bg_list_head->next;
+    }
 
     return 0;
 }

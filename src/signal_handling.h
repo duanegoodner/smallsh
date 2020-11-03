@@ -1,7 +1,6 @@
 #include "command.h"
-#include "globals.h"
 
-#ifdef DEALING_WITH_SIGNALS
+#ifndef DEALING_WITH_SIGNALS
 #define DEALING_WITH_SIGNALS
 
 void handle_SIGTSTP (int signo);

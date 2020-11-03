@@ -10,13 +10,13 @@
 #include "command.h"
 #include "utilities.h"
 #include "globals.h"
-#include "built_ins.h"
+// #include "built_ins.h"
 #include "process_mgmt.h"
 #include "signal_handling.h"
 
-#define NO_FG_RUN_YET "No foreground processes run yet, but per instructions, report exit status"
+#define NO_FG_RUN_YET "No foreground processes run yet, but per instructions, report exit value"
 #define LAST_FG_TERMINATED "The last foreground process was terminated by signal"
-#define LAST_FG_EXITED "The last foreground process exited normally with exit status"
+#define LAST_FG_EXITED "The last foreground process exited normally with exit value"
 
 struct command *bg_list_head = NULL;
 struct command *bg_list_tail = NULL;
@@ -28,17 +28,6 @@ bool last_fg_terminated = false;
 bool bg_launch_allowed = true;
 bool potential_zombies = false;
 
-
-
-void killall_bgprocs(void) {
-    // TO DO: change var names to be consistent with usage in zombie kill funct
-    // Should be OK not doing and free() since program exits immediately after this funct runs
-    // Still consider doing a full free (and use part of zombie killing funct)
-    while (bg_list_head != NULL) {
-        kill(bg_list_head->process_id, SIGKILL);
-        bg_list_head = bg_list_head->next;
-    }
-}
 
 int redirect_ouptut(char* new_out_path) {
     int out_fd = open(new_out_path, O_WRONLY | O_CREAT | O_TRUNC, 0640);
@@ -203,7 +192,7 @@ void remove_bgpid_node(struct command* curr_node, struct command* prev_node) {
     free_command(curr_node);
 }
 
-#define BG_DONE_MSG_START "background pid "
+#define BG_DONE_MSG_START "\nbackground pid "
 #define BG_DONE_MSG_END " is done: "
 #define BG_EXIT_MSG "exit value "
 #define BG_TERM_MSG "terminated by signal "
@@ -218,7 +207,7 @@ void remove_zombies(void) {
         if (waitpid(curr_node->process_id, &bgchild_status, WNOHANG)) {
             char* process_id_str = malloc_atoi(curr_node->process_id);
             int process_id_str_len = strlen_int(curr_node->process_id);
-            write(STDOUT_FILENO, BG_DONE_MSG_START, 15);
+            write(STDOUT_FILENO, BG_DONE_MSG_START, 16);
             write(STDOUT_FILENO, process_id_str, process_id_str_len);
             write(STDOUT_FILENO, BG_DONE_MSG_END, 10);
             free(process_id_str);

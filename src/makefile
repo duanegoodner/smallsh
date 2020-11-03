@@ -1,4 +1,4 @@
-output: main.o command.o process_mgmt.o utilities.o
+output: main.o command.o process_mgmt.o built_ins.o signal_handling.o utilities.o
 	gcc -g --std=gnu99 main.o command.o built_ins.o process_mgmt.o utilities.o signal_handling.o -o smallsh
 
 main.o: main.c

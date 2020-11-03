@@ -7,12 +7,12 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <fcntl.h>
-#include "command.h"
-#include "utilities.h"
+// #include "command.h"
+// #include "utilities.h"
 #include "globals.h"
-#include "built_ins.h"
+// #include "built_ins.h"
 #include "process_mgmt.h"
-#include "signal_handling.h"
+// #include "signal_handling.h"
 
 #define ENTER_FG_ONLY_MSG "\nEntering foreground-only mode (& is now ignored)\n"
 #define EXIT_FG_ONLY_MSG "\nExiting foreground-only mode\n"
