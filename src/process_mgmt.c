@@ -10,7 +10,6 @@
 #include "command.h"
 #include "utilities.h"
 #include "globals.h"
-// #include "built_ins.h"
 #include "process_mgmt.h"
 #include "signal_handling.h"
 
@@ -57,98 +56,21 @@ void redirect_input(char* new_in_path) {
     }
 }
 
-int launch_foreground(struct command* curr_command) {
 
-    int fgchild_status;
-    curr_command->process_id = fork();
 
-    if (curr_command->process_id == -1) {
-        perror("fork() failed.");
-        exit(1);
-    
-    // child branch
-    } else if (curr_command->process_id == 0) {
-        
-        // add signal handlers
-        set_fgchild_sighandlers();
-        
-        // deal with redirects
-        if (curr_command->output_redirect != NULL) {
-            redirect_ouptut(curr_command->output_redirect);
-        }
-        if (curr_command->input_redirect != NULL) {
-        redirect_input(curr_command->input_redirect);
-        }
-              
-        // use execv to load and run new program
-        execvp(curr_command->args[0], curr_command->args);
-
-        // if execv fails:
-        fprintf(stderr, "%s: no such file or directory\n", curr_command->args[0]);
-        exit(1);
-
-    // parent branch
-    } else {
-        curr_command->process_id = waitpid(curr_command->process_id, &fgchild_status, 0);
-        if (WIFEXITED(fgchild_status)) {   // consider making status a member of command struct
+void get_fg_status(int child_status) {
+    if (WIFEXITED(child_status)) {   // consider making status a member of command struct
             last_fg_endmsg = LAST_FG_EXITED;
-            last_fg_endsig = WEXITSTATUS(fgchild_status);
+            last_fg_endsig = WEXITSTATUS(child_status);
         } else {
             last_fg_endmsg = LAST_FG_TERMINATED;
-            last_fg_endsig = WTERMSIG(fgchild_status);
+            last_fg_endsig = WTERMSIG(child_status);
             last_fg_terminated = true;
         }
-        free_command(curr_command);
-    }
-
-    return 1; // need this val because run_flag = 1 causes main while loop to repeat
-    // TO DO: consider making run_flag = 0 cause while loop to continue
-    // so that everything except for built-in exit can return 0 (more conventional)
 }
 
-#define DEFAULT_BG_REDIRECT "/dev/null" //may need to be char* ?
-int launch_background(struct command* curr_command) {
-// foreground and background launch codes pretty similar. mayber refactor into one funct?
-// keep separate at least until confirmed both work.
 
-    int bgchild_status;
-    curr_command->process_id = fork();
 
-    if (curr_command->process_id == -1) {
-        perror("fork() failed.");
-        exit(1);
-    
-    //child branch
-    } else if (curr_command->process_id == 0) {
-
-        //add signal handlers:
-        set_bgchild_sighandlers();
-
-        //set up redirects
-        if (curr_command->output_redirect == NULL) {
-            redirect_ouptut(DEFAULT_BG_REDIRECT);
-        } else {
-            redirect_ouptut(curr_command->output_redirect);
-        }
-        if (curr_command->input_redirect == NULL) {
-            redirect_input(DEFAULT_BG_REDIRECT);
-        } else {
-            redirect_input(curr_command->input_redirect);
-        }
-
-        //execv call
-        execvp(curr_command->args[0], curr_command->args);
-
-        //handle execv failure
-        fprintf(stderr, "could not find command %s\n", curr_command->args[0]);
-        exit(1);        
-
-    } else {
-        start_tracking_bg(curr_command);
-    }
-
-    return 1;
-}
 
 void force_report_last_fg_end(void) {
     printf("%s %d\n", last_fg_endmsg, last_fg_endsig);
@@ -238,4 +160,62 @@ void remove_zombies(void) {
     }
 
     potential_zombies = false;  // TBD if this'll be used. If decide no, then delete.
+}
+
+#define DEFAULT_BG_REDIRECT "/dev/null"
+void set_bgchild_redirect(struct command *curr_command) {
+    if (curr_command->output_redirect == NULL) {
+            redirect_ouptut(DEFAULT_BG_REDIRECT);
+        } else {
+            redirect_ouptut(curr_command->output_redirect);
+        }
+        if (curr_command->input_redirect == NULL) {
+            redirect_input(DEFAULT_BG_REDIRECT);
+        } else {
+            redirect_input(curr_command->input_redirect);
+        }
+}
+
+void set_fgchild_redirect(struct command *curr_command) {
+    if (curr_command->output_redirect != NULL) {
+            redirect_ouptut(curr_command->output_redirect);
+        }
+    if (curr_command->input_redirect != NULL) {
+        redirect_input(curr_command->input_redirect);
+        }
+}
+
+int launch_child_proc(struct command* curr_command) {
+    int child_status;
+    curr_command->process_id = fork();
+
+    if (curr_command->process_id == -1) {
+        perror("fork() failed.");
+        exit(1);
+    } else if (curr_command->process_id == 0) {
+        if (bg_launch_allowed && curr_command->background) {
+            set_bgchild_sighandlers();
+            set_bgchild_redirect(curr_command);
+        } else {
+            set_fgchild_sighandlers();
+            set_fgchild_redirect(curr_command);
+        }
+
+        execvp(curr_command->args[0], curr_command->args);
+
+        fprintf(stderr, "%s: no such file or directory\n", curr_command->args[0]);
+        exit(1);        
+    } else {
+        if (bg_launch_allowed && curr_command->background) {
+            start_tracking_bg(curr_command);
+        } else {
+            curr_command->process_id = waitpid(curr_command->process_id, &child_status, 0);
+            get_fg_status(child_status);
+            free_command(curr_command);
+
+        }
+    }
+    
+    return 1;
+
 }

@@ -1,0 +1,156 @@
+PRE-SCRIPT INFO
+  Grading Script PID: 22742
+  Note: your smallsh will report a different PID when evaluating $$
+: BEGINNING TEST SCRIPT
+: 
+: --------------------
+: Using comment (5 points if only next prompt is displayed next)
+: : 
+: 
+: --------------------
+: ls (10 points for returning dir contents)
+: built_ins.c
+built_ins.h
+built_ins.o
+command.c
+command.h
+command.o
+globals.h
+junk
+junk2
+main.c
+main.o
+makefile
+modularized-test01
+morejunk
+p3testscript
+process_mgmt.c
+process_mgmt.h
+process_mgmt.o
+refactor_launch-test01
+refactor_launch-test02
+signal_handling.c
+signal_handling.h
+signal_handling.o
+smallsh
+tests
+utilities.c
+utilities.h
+utilities.o
+: 
+: 
+: --------------------
+: ls out junk
+: : 
+: 
+: --------------------
+: cat junk (15 points for correctly returning contents of junk)
+: built_ins.c
+built_ins.h
+built_ins.o
+command.c
+command.h
+command.o
+globals.h
+junk
+junk2
+main.c
+main.o
+makefile
+modularized-test01
+morejunk
+p3testscript
+process_mgmt.c
+process_mgmt.h
+process_mgmt.o
+refactor_launch-test01
+refactor_launch-test02
+signal_handling.c
+signal_handling.h
+signal_handling.o
+smallsh
+tests
+utilities.c
+utilities.h
+utilities.o
+: 
+: 
+: --------------------
+: wc in junk (15 points for returning correct numbers from wc)
+:  28  28 346
+: 
+: 
+: --------------------
+: wc in junk out junk2; cat junk2 (10 points for returning correct numbers from wc)
+: :  28  28 346
+: 
+: 
+: --------------------
+: test -f badfile (10 points for returning error value of 1, note extraneous &)
+: : The last foreground process exited normally with exit value 1
+: 
+: 
+: --------------------
+: wc in badfile (10 points for returning text error)
+: cannot open badfile for input
+: 
+: 
+: --------------------
+: badfile (10 points for returning text error)
+: badfile: no such file or directory
+: 
+: 
+: --------------------
+: sleep 100 background (10 points for returning process ID of sleeper)
+: background pid is 22793
+: 
+: 
+: --------------------
+: pkill -signal SIGTERM sleep (10 points for pid of killed process, 10 points for signal)
+: (Ignore message about Operation Not Permitted)
+: 
+background pid 22793 is done: terminated by signal 15
+: 
+: 
+: --------------------
+: sleep 1 background (10 pts for pid of bg ps when done, 10 for exit value)
+: background pid is 22804
+: 
+background pid 22804 is done: exit value 0
+: : 
+: 
+: --------------------
+: pwd
+: /home/duane/dproj/CS344/assign03b/src
+: 
+: 
+: --------------------
+: cd
+: : 
+: 
+: --------------------
+: pwd (10 points for being in the HOME dir)
+: /home/duane
+: 
+: 
+: --------------------
+: mkdir testdir22743
+: : 
+: 
+: --------------------
+: cd testdir22743
+: : 
+: 
+: --------------------
+: pwd (5 points for being in the newly created dir)
+: /home/duane/testdir22743
+: --------------------
+: Testing foreground-only mode (20 points for entry & exit text AND ~5 seconds between times)
+: 
+Entering foreground-only mode (& is now ignored)
+: : Tue 03 Nov 2020 06:14:39 PM +08
+: background pid is 22840
+: Tue 03 Nov 2020 06:14:39 PM +08
+: 
+Exiting foreground-only mode
+: : 

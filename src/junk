@@ -6,6 +6,7 @@ command.h
 command.o
 globals.h
 junk
+junk2
 main.c
 main.o
 makefile
@@ -15,6 +16,11 @@ p3testscript
 process_mgmt.c
 process_mgmt.h
 process_mgmt.o
+refactor_launch-test01
+refactor_launch-test02
+refactor_launch-test03
+refactor_launch-test04
+refactor_launch-test05
 signal_handling.c
 signal_handling.h
 signal_handling.o

@@ -56,11 +56,14 @@ int main(void) {
         if (bltin_index >= 0) {
             run_flag = (*bltin_funct_ptrs[bltin_index]) (curr_command);
         } 
-        else if (bg_launch_allowed && curr_command->background) {
-            run_flag = launch_background(curr_command);
-        }
+        // else if (bg_launch_allowed && curr_command->background) {
+        //     run_flag = launch_background(curr_command);
+        // }
+        // else {
+        //     run_flag = launch_foreground(curr_command);
+        // }
         else {
-            run_flag = launch_foreground(curr_command);
+            launch_child_proc(curr_command);
         }
      }
 
