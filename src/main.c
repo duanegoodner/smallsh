@@ -22,7 +22,7 @@ int main(void) {
 
     int run_flag = 1;
     pid_t shell_pid = getpid();
-    char* shell_pid_str = int_to_dynstr(shell_pid);
+    char* shell_pid_str = malloc_atoi(shell_pid);
 
     set_shell_sighandlers();
     

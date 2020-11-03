@@ -11,6 +11,7 @@ junk2
 main.c
 main.o
 makefile
+mem_cleanup-01
 p3testscript
 process_mgmt.c
 process_mgmt.h
@@ -21,6 +22,7 @@ signal_handling.c
 signal_handling.h
 signal_handling.o
 smallsh
+tes46137
 tests
 utilities.c
 utilities.h
