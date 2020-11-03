@@ -1,5 +1,5 @@
 PRE-SCRIPT INFO
-  Grading Script PID: 23413
+  Grading Script PID: 41592
   Note: your smallsh will report a different PID when evaluating $$
 : BEGINNING TEST SCRIPT
 : 
@@ -16,21 +16,14 @@ command.c
 command.h
 command.o
 globals.h
-junk
-junk2
 main.c
 main.o
 makefile
-modularized-test01
-morejunk
 p3testscript
 process_mgmt.c
 process_mgmt.h
 process_mgmt.o
-refactor_launch-test01
-refactor_launch-test02
-refactor_launch-test03
-refactor_launch-test04
+refactor-command-01
 signal_handling.c
 signal_handling.h
 signal_handling.o
@@ -55,20 +48,14 @@ command.h
 command.o
 globals.h
 junk
-junk2
 main.c
 main.o
 makefile
-modularized-test01
-morejunk
 p3testscript
 process_mgmt.c
 process_mgmt.h
 process_mgmt.o
-refactor_launch-test01
-refactor_launch-test02
-refactor_launch-test03
-refactor_launch-test04
+refactor-command-01
 signal_handling.c
 signal_handling.h
 signal_handling.o
@@ -81,12 +68,12 @@ utilities.o
 : 
 : --------------------
 : wc in junk (15 points for returning correct numbers from wc)
-:  30  30 392
+:  24  24 286
 : 
 : 
 : --------------------
 : wc in junk out junk2; cat junk2 (10 points for returning correct numbers from wc)
-: :  30  30 392
+: :  24  24 286
 : 
 : 
 : --------------------
@@ -106,21 +93,21 @@ utilities.o
 : 
 : --------------------
 : sleep 100 background (10 points for returning process ID of sleeper)
-: background pid is 23464
+: background pid is 41643
 : 
 : 
 : --------------------
 : pkill -signal SIGTERM sleep (10 points for pid of killed process, 10 points for signal)
 : (Ignore message about Operation Not Permitted)
 : 
-background pid 23464 is done: terminated by signal 15
+background pid 41643 is done: terminated by signal 15
 : 
 : 
 : --------------------
 : sleep 1 background (10 pts for pid of bg ps when done, 10 for exit value)
-: background pid is 23475
+: background pid is 41654
 : 
-background pid 23475 is done: exit value 0
+background pid 41654 is done: exit value 0
 : : 
 : 
 : --------------------
@@ -138,22 +125,22 @@ background pid 23475 is done: exit value 0
 : 
 : 
 : --------------------
-: mkdir testdir23414
+: mkdir testdir41593
 : : 
 : 
 : --------------------
-: cd testdir23414
+: cd testdir41593
 : : 
 : 
 : --------------------
 : pwd (5 points for being in the newly created dir)
-: /home/duane/testdir23414
+: /home/duane/testdir41593
 : --------------------
 : Testing foreground-only mode (20 points for entry & exit text AND ~5 seconds between times)
 : 
 Entering foreground-only mode (& is now ignored)
-: : Tue 03 Nov 2020 06:20:29 PM +08
-: : Tue 03 Nov 2020 06:20:34 PM +08
+: : Tue 03 Nov 2020 11:09:10 PM +08
+: : Tue 03 Nov 2020 11:09:15 PM +08
 : 
 Exiting foreground-only mode
 : : 

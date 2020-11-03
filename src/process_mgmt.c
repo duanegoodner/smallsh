@@ -84,7 +84,7 @@ void add_bg_node(struct command *curr_command) {
         bg_list_tail = curr_command;
     } else {
         bg_list_tail->next = curr_command;
-        bg_list_tail = bg_list_tail->next;  // could use new_bg_pid_node
+        bg_list_tail = bg_list_tail->next; 
     }
 }
 
@@ -96,8 +96,6 @@ void start_tracking_bg(struct command *curr_command) {
 
 void remove_bgpid_node(struct command* curr_node, struct command* prev_node) {
 // consider adding a return value that confirms removal is successful
-// consider changing variable name to dead node to match calling function name
-    // write(STDOUT_FILENO, "\n1b\n", 4);
     if (curr_node == bg_list_head && curr_node == bg_list_tail) {
         bg_list_head = NULL;
         bg_list_tail = NULL;

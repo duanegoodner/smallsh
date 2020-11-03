@@ -10,6 +10,7 @@
 #include "command.h"
 #include "utilities.h"
 
+#define COMMENT_CHAR '#'
 
 struct command* get_command(char* expand_wc, char* expand_repl) {
     int n_inputs = 0;
@@ -18,10 +19,11 @@ struct command* get_command(char* expand_wc, char* expand_repl) {
     char* curr_line = get_input_line();
     char** inputs = parse_input_line(curr_line, &n_inputs);
 
-    if (n_inputs == 0) {
+    if (n_inputs == 0 || (is_comment(inputs))) {
         curr_command = NULL;
+        return curr_command;
     } else {
-        curr_command = build_prelim_command(inputs, &n_inputs);
+        curr_command = build_unexpanded_command(inputs, &n_inputs);
     }    
     free(curr_line);
     free(inputs);
@@ -29,6 +31,58 @@ struct command* get_command(char* expand_wc, char* expand_repl) {
     expand_var(curr_command, expand_wc, expand_repl);
 
     return curr_command;
+}
+
+struct command *build_unexpanded_command(char** inputs, int *n_inputs) {
+    struct command *curr_command = malloc(sizeof(struct command));
+    
+    int index;
+    int index_limit = *n_inputs;
+    int arg_count = 0;
+    curr_command->next = NULL;
+    curr_command->process_id = -5;  // initialize to "safe" val. this mimics example at:
+    // https://repl.it/@cs344/51zombieexc 
+
+    curr_command->input_redirect = NULL;
+    curr_command->output_redirect = NULL;
+
+    curr_command->background = bg_command_check(inputs, n_inputs);
+    index_limit = index_limit - (int) curr_command->background;
+    get_argc_and_redirs(curr_command, inputs, index_limit);
+    populate_args(curr_command, inputs);
+
+    return curr_command;
+}
+
+void populate_args(struct command* curr_command, char** inputs) {
+    for (int index = 0; index < curr_command->arg_count; index++) {
+        curr_command->args[index] = calloc(strlen(inputs[index]), sizeof(char));
+        strcpy(curr_command->args[index], inputs[index]);
+    }
+
+    curr_command->args[curr_command->arg_count] = NULL;
+}
+
+void get_argc_and_redirs(struct command* curr_command, char** inputs, int index_limit) {
+ 
+    int arg_count = 0;
+
+    // Gather redirect info and count number of actual args.
+    // Redirect symbols and filenames will not go into args.
+    for (int index = 0; index < index_limit; index++) {
+        if (is_redirect_in(inputs[index])) {
+            curr_command->input_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
+            strcpy(curr_command->input_redirect, inputs[index + 1]);
+            index++;
+        } else if (is_redirect_out(inputs[index])) {
+            curr_command->output_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
+            strcpy(curr_command->output_redirect, inputs[index + 1]);
+            index++;
+        } else {
+            arg_count++; 
+        }
+    }
+    curr_command->arg_count = arg_count;
 }
 
 void expand_var(struct command* curr_command, char* old_str, char* new_str) {
@@ -90,67 +144,12 @@ bool is_redirect_in(char* input) {
 }
 
 #define BG_FLAG "&"
-bool is_bg_command(char** inputs, int *n_inputs) {
+bool bg_command_check(char** inputs, int *n_inputs) {
     if (strcmp(inputs[*n_inputs - 1], BG_FLAG)) {
         return false;
     } else {
         return true;
     }
-}
-
-struct command *build_prelim_command(char** inputs, int *n_inputs) {
-    
-    struct command *curr_command = malloc(sizeof(struct command));
-    int index;
-    int index_limit = *n_inputs;
-    int arg_count = 0;
-    
-    curr_command->next = NULL;
-    curr_command->process_id = -5;  // initialize to "safe" val. this mimics example at:
-    // https://repl.it/@cs344/51zombieexc 
-
-    curr_command->input_redirect = NULL;
-    curr_command->output_redirect = NULL;
-
-
-    // check if curr_command is intended to run in background
-    if (is_bg_command(inputs, n_inputs)) {
-        curr_command->background = true;
-        index_limit--;
-    } else {
-        curr_command->background = false;
-    }
-
-    
-    // Gather redirect info and count number of actual args.
-    // Redirect symbols and filenames will not go into args.
-    for (index = 0; index < index_limit; index++) {
-        if (is_redirect_in(inputs[index])) {
-            curr_command->input_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
-            strcpy(curr_command->input_redirect, inputs[index + 1]);
-            index++;
-        } else if (is_redirect_out(inputs[index])) {
-            curr_command->output_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
-            strcpy(curr_command->output_redirect, inputs[index + 1]);
-            index++;
-        } else {
-            arg_count++; 
-        }
-    }
-    curr_command->arg_count = arg_count;
-
-    // need (arg_count + 1) elements so we can have NULL as final array element 
-    // char** args = malloc(arg_count * sizeof(char*));
-   
-    for (index = 0; index < arg_count; index++) {
-        curr_command->args[index] = calloc(strlen(inputs[index]), sizeof(char));
-        strcpy(curr_command->args[index], inputs[index]);
-    }
-    
-    curr_command->args[arg_count] = NULL;
-    // curr_command->args = args;
-    
-    return curr_command;
 }
 
 void free_command(struct command* curr_command) {
@@ -161,10 +160,6 @@ void free_command(struct command* curr_command) {
                 free(curr_command->args[index]);
             }  
         }
-        // if (curr_command->args != NULL)
-        // {
-        //     free(curr_command->args);
-        // }
         if (curr_command->input_redirect != NULL) {
             free(curr_command->input_redirect);
         }
@@ -177,19 +172,62 @@ void free_command(struct command* curr_command) {
     
 }
 
-#define COMMENT_CHAR '#'
-bool is_comment(struct command *curr_command) {
-    if (curr_command->args[0][0] == COMMENT_CHAR) {
+bool is_comment(char **inputs) {
+    if (inputs[0][0] == COMMENT_CHAR) {
         return true;
     } else {
         return false;
     }
 }
 
-bool is_null(struct command *curr_command) {
-    if (curr_command->args[0] == NULL) {
-        return true;
-    } else {
-        return false;
-    }
-}
+
+// struct command *build_unexpanded_command(char** inputs, int *n_inputs) {
+    
+//     struct command *curr_command = malloc(sizeof(struct command));
+//     int index;
+//     int index_limit = *n_inputs;
+//     int arg_count = 0;
+    
+//     curr_command->next = NULL;
+//     curr_command->process_id = -5;  // initialize to "safe" val. this mimics example at:
+//     // https://repl.it/@cs344/51zombieexc 
+
+//     curr_command->input_redirect = NULL;
+//     curr_command->output_redirect = NULL;
+
+
+//     // check if curr_command is intended to run in background
+//     if (is_bg_command(inputs, n_inputs)) {
+//         curr_command->background = true;
+//         index_limit--;
+//     } else {
+//         curr_command->background = false;
+//     }
+
+    
+//     // Gather redirect info and count number of actual args.
+//     // Redirect symbols and filenames will not go into args.
+//     for (index = 0; index < index_limit; index++) {
+//         if (is_redirect_in(inputs[index])) {
+//             curr_command->input_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
+//             strcpy(curr_command->input_redirect, inputs[index + 1]);
+//             index++;
+//         } else if (is_redirect_out(inputs[index])) {
+//             curr_command->output_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
+//             strcpy(curr_command->output_redirect, inputs[index + 1]);
+//             index++;
+//         } else {
+//             arg_count++; 
+//         }
+//     }
+//     curr_command->arg_count = arg_count;
+  
+//     for (index = 0; index < arg_count; index++) {
+//         curr_command->args[index] = calloc(strlen(inputs[index]), sizeof(char));
+//         strcpy(curr_command->args[index], inputs[index]);
+//     }
+    
+//     curr_command->args[arg_count] = NULL;
+    
+//     return curr_command;
+// }

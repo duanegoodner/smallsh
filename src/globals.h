@@ -4,7 +4,6 @@
 #define C_PROMPT ": "
 #define NEWLINE "\n"
 #define NEWLINE_C_PROMPT "\n: "
-#define COMMENT_CHAR "#"
 #define DEFAULT_DIR "HOME"
 
 #ifndef HAVE_GLOBAL_VARS

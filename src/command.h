@@ -20,16 +20,21 @@ struct command
     struct command *next;
 };
 
+
+
+struct command *get_command(char* expand_wc, char* expand_repl);
 char* get_input_line(void);
 char** parse_input_line(char *curr_line, int *n_inputs);
+struct command *build_unexpanded_command(char** inputs, int *n_inputs);
+void get_argc_and_redirs(struct command* curr_command, char** inputs, int index_limit);
+void populate_args(struct command* curr_command, char** inputs);
+void expand_var(struct command* curr_command, char* old_str, char* new_str);
+
+bool is_comment(char** inputs);
 bool is_redirect_out(char* input);
 bool is_redirect_in(char* input);
-bool is_bg_command(char** inputs, int* n_inputs);
-struct command *build_prelim_command(char** inputs, int *n_inputs);
-struct command *get_command(char* expand_wc, char* expand_repl);
-void expand_var(struct command* curr_command, char* old_str, char* new_str);
+bool bg_command_check(char** inputs, int *n_inputs); 
+
 void free_command (struct command* curr_command);
-bool is_comment(struct command* curr_command);
-bool is_null(struct command* curr_command);
 
 #endif
