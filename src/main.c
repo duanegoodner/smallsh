@@ -2,13 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <fcntl.h>
 #include "command.h"
 #include "utilities.h"
 #include "globals.h"
@@ -16,7 +11,7 @@
 #include "process_mgmt.h"
 #include "signal_handling.h"
 
-#define V_EXP_REPLACE "$$"
+#define VAR_EXPAND "$$"
 
 int main(void) {
 
@@ -30,7 +25,7 @@ int main(void) {
            
         printf(C_PROMPT);
         fflush(stdout);  
-        struct command *curr_command = get_command(V_EXP_REPLACE, shell_pid_str);
+        struct command *curr_command = get_command(VAR_EXPAND, shell_pid_str);
         
         // Check for empty line or comment character
         if (curr_command == NULL) {

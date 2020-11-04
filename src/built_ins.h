@@ -1,6 +1,4 @@
 
-#include "globals.h"
-
 #ifndef HAVE_ANY_BUILTIN_FUNCTS
 #define HAVE_ANY_BUILTIN_FUNCTS
 
