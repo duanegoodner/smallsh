@@ -1,4 +1,3 @@
-#include "command.h"
 
 #ifndef DEALING_WITH_SIGNALS
 #define DEALING_WITH_SIGNALS
