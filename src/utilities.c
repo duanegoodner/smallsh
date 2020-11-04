@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "utilities.h"
 
-
+// replaces a one dyanmically allocated string with another and frees the original
 char* dsubstr_replace_all(char* orig, char* search, char* replace) {
 
   int size_delta = strlen(replace) - strlen(search);
@@ -25,18 +25,8 @@ char* dsubstr_replace_all(char* orig, char* search, char* replace) {
   return new_str;
 }
 
-char* int_to_dynstr(int n) {
-    // plenty of space for string. could use log & floor to just malloc
-    // but using the quick & easy way for now.
-    char string_buffer[100];
-
-    sprintf(string_buffer, "%d", n);
-    char* dyn_istring = calloc(strlen(string_buffer) + 1, sizeof(char));
-    strcpy(dyn_istring, string_buffer);
-
-    return dyn_istring;
-}
-
+// Takes an interger and returns a pointer to dyanamically allocated string of characters
+// that represent that integer.
 // REFERENCE:
 // Used code linked at this link as a starting point (but modified significantly)
 // https://stackoverflow.com/questions/9994742/want-to-convert-integer-to-string-without-itoa-function
@@ -65,6 +55,7 @@ char* malloc_atoi(int val) {
   return str;
 }
 
+// determines the number of characters that will be needed to print an integer as a string (in base 10)
 int strlen_int(int val) {
   int len = 0;
   if (val < 0) {

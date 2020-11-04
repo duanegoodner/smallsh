@@ -1,0 +1,4 @@
+PRE-SCRIPT INFO
+  Grading Script PID: 31122
+  Note: your smallsh will report a different PID when evaluating $$
+./p3testscript: line 7: ./smallsh: No such file or directory
