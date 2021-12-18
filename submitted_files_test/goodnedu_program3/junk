@@ -4,17 +4,11 @@ built_ins.o
 command.c
 command.h
 command.o
-final_junk
-final_junk2
-final-os1-test
 globals.h
 junk
-junk2
-local-final-test
 main.c
 main.o
 makefile
-mytestresults
 p3testscript
 process_mgmt.c
 process_mgmt.h
@@ -24,8 +18,7 @@ signal_handling.c
 signal_handling.h
 signal_handling.o
 smallsh
-test_after_mem-check_merge
-test_before_chane_struct-alloc-location
+submitted-files-test-final
 utilities.c
 utilities.h
 utilities.o
