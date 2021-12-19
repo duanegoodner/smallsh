@@ -2,7 +2,9 @@
 
 # smallsh #
 
-This program runs a small Linux shell (`smallsh`) that implements some of the features found in widely used shell programs such as Bash and Zsh.
+***A small Linux shell that implements some of the features found in widely used shell programs such as Bash and Zsh.***
+
+<br>
 
 ## Features ##
 
@@ -14,40 +16,73 @@ This program runs a small Linux shell (`smallsh`) that implements some of the fe
 * Input and output redirection
 * Custom signal handlers for SIGINT and SIGTSTP
 
+## Specifications ##
+
+### 1. Command Line `':'` ###
+
+* Prompt symbol: `:`
+* Command syntax: `command [arg1 arg2 ...] [< input_file] [> output_file] [&]`
+* If the final argument of a non-built-in command is `&`, and the shell is NOT is foreground-only mode (see section __ below) the command is executed in the background.
+* If an argument uses both input and output redirection, `< input_file` and be placed before or after `> output_file`.
+
+### 2. Comments and Blank Lines ###
+
+* Any line that begins with a `#` character is treated as a *comment*. Upon receiving either a comment or a blank line, the shell simply re-prompts for the next command.
+
+### 3. Variable Expansion
+
+* Any instance of `$$` in a command is expanded into the process ID of `smallsh`.
+
+### 4. Built-in Commands
+
+* `exit`: Does not take any arguments. This command kills any existing child processes that the shell has launched and then terminates the `smallsh`.
+* `cd`: Changes the working directory of `smallsh`. If no arguments are passed, then the directory is changed to that specified in the HOME environment variable. Cann also take a single argument specifying the absolute or relative path of an existing directory to change to.
+* `status`: prints either the exit status or the terminating signal of the last non-built-in foreground process run by the shell. If no such process has run, return exit status of `0`.
+* Built-in commands always run in the foreground. If a valid built-in command is appended with `&`, the `&` is ignored, and the command still runs in the foreground.
+* NOTE: A built-in command does NOT result in the creation of a child process.
+
+### 5. Non-built-in Commands ###
+* Any time a non-built-in command is received, `smallsh` creates a child process using `fork()` and then uses `execvp()` to attempt to change the program of the child process to that correspondig to the command.
+* Any valid command that is either in the PATH variable or is a valid shell script will then be run, and the corresponding child process is terminated upon completion of the command's program.
+* If the command to run cannot be found, an error message is printed, the child process is terminated, and the exit status is set to 1.
+
+### 6. Input and Output Redirection
+ * Any input and/or output redirection specified by a command is performed using `dup2()` prior calling `execvp()`.
+ * Any file used for input redirection is opened in read-only mode.
+ * Any file use for output redirection is opened in write-only mode. If the output file does not exist, it is created. If it already exists, it is truncated.
+ * If an input or output file cannot be opened, an error is printed, and the exit status is set to 1.
+
+
+ ### 7. Foreground and Background Execution
+
+* All built-in commands as well as all non-built-in commands that do not end with `&` run in the **foreground**. The shell waits for a foreground command to complete before prompting the user for another command.
+* Non-built-in commands thate end with `&` and are received with `smallsh` is not in foreground-only mode (see next section), run in the **background**. `smallsh` prompts the user for the next command immediately after forking the child process for a background command.
+* The process ID of of a background command is printed when the process begins, and a message showing the process ID and exit status is printed when a background process terminates.
+* Any background command without specified input redirection has its input redirected to dev/null. Similarly, any background command without specified output redirection has its output redirected to dev/null.
+
+
+### 8. Custom Signal Handling ###
+
+**SIGINT**
+* SIGINT is ignored by the parent process and any background child processes. However, any foreground child process still follows the default Linux default response and terminates.
+* While this behavior is expected from a shell program, without the custom handling that is implemented in **smallsh**, SIGINT would cause **smallsh** and ALL of its child processes to terminate since it runs as a foreground process in the shell from which it is launched.
+
+
+**SIGTSTP**
+* SIGSTP  causes the program to toggle in and out of *foreground-only mode*.
+* The first time SIGTSTP is sent to an instance of **smallsh**, if no foreground process is running, the shell immediately displays the message `Entering foreground-only mode (& is now ignored)` and enters a state that does not allow new processes to be launched in the background. If a foreground process is running when the signal is sent, the message display and state change occur immediately after that foreground process completes.
+* A subsequent SIGTSTP signal causes the shell to display the message `Exiting foreground-only mode` and return to a state that allows non-built-in processes to be launched in the background.
+* All child processes (foreground and background) ignore SIGTSTP.
 
 
 
-* A command prompt using the syntax:
-`command [arg1 arg2 ...] [< input_file] [output_file] [&]`
-* Treats lines prepended with a `#` character as comments and ignores them. Also ignores blank lines.
-* Expands the variable `$$` into the shell's process ID
-* Executes `exit`, `cd`, and `status` commands in the foreground using code built into the shell
-    * `exit` does not take any arguments. When this command is called, the program kills any child processes or jobs it has launched and then terminates itself.
-    * `cd` changes the working directory of `smallsh` to a relative or absolute path provided as the argument.
-    * `status` does not take any argments. This command prints out the exit status or terminating signal of the most recently run non-built-in foreground process. If the current shell session has not yet run any such processes, exit status 0 is displayed.
-* Runs any non-built-in command that is found in the PATH variable or is a valid shell script as a newly forked process.
-    * If the final argument of a non-built-in command is `&`, and program is not in foreground-only mode (see below), the command will run  in the background. Otherwise, it will run in the foreground.
-    * If the command fails because it is not found, an error message is displayed, and the exit status is set to 1.
-*
 
 
 
+### Referenes ###
 
-Features of he user to run any of three built-in commands (status, cd, and exit) as well as any other command found in the . Any other command found int the user's .  Non-built-in command can be run as either foreground or background processes. Built in commands can only run in the foreground. Child processes can run in either the background (using standard '&' at end of command) or background
-(if no '&' is used). The program supports input and output redirection
-for child processes (but not for built in commands) using the standard
-'<' for input redirection and '>' for output redirection. A '#' character
-at the start of a line causes that line to be interpreted as a comment.
-The program supports a simple variable expansion feature by expanding
-the substring '$$' to the shell process id. The program also supports
-signal handling features specified in the section titled:
-"Assignmet 3: smallsh (Portfolio Assignment)" in the course
-website: https://canvas.oregonstate.edu/courses/1784217/modules
 
-The general structure of the main() function follows the approach
-described by S. Brennan at the web page "Tutorial - Write a Shell in C"
-(Link: https://brennan.io/2015/01/16/write-a-shell-in-c/) and in
-the Github repository (also owned by S Brennan) at:
-https://github.com/brenns10/lsh. Brennan's clever use of an array
-of pointers to built-in functions is also implemented in the current
-program.
+* [Write a Shell in C](https://brennan.io/2015/01/16/write-a-shell-in-c/)
+
+
+
