@@ -1,11 +1,13 @@
 
-# /debug
+/debug
 
-# *.o
+*.o
 
-# /*.code-workspace
+/*.code-workspace
 
-# /.vscode
+/.vscode
+
+*.log
 
 
 

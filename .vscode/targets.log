@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Dec 20 11:52:11 2021
+# Make data base, printed on Mon Dec 20 14:21:07 2021
 
 # Variables
 
@@ -49,7 +49,7 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/duane/dproj/CS344/assign03b
+CURDIR := /home/duane/dproj/smallsh
 # makefile
 SHELL = /bin/sh
 # environment
@@ -91,7 +91,7 @@ LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 LC_NAME = en_US.UTF-8
 # environment
-VSCODE_CWD = /home/duane/dproj/CS344/assign03b
+VSCODE_CWD = /home/duane/dproj/smallsh
 # environment
 GSETTINGS_SCHEMA_DIR = /snap/code/85/usr/share/glib-2.0/schemas
 # default
@@ -153,7 +153,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-PWD = /home/duane/dproj/CS344/assign03b
+PWD = /home/duane/dproj/smallsh
 # default
 .LOADED := 
 # environment
@@ -225,7 +225,7 @@ GNOME_SHELL_SESSION_MODE = ubuntu
 # makefile (from 'Makefile', line 21)
 TARGET_DEBUG := debug/smallsh
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3496516e-da79-445a-88e8-0b902cbaccb3.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8b4ade16-4996-4e92-9a9d-41ea5fbb66ce.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -251,7 +251,7 @@ CONDA_SHLVL = 1
 # default
 MAKE_COMMAND := make
 # environment
-OLDPWD = /home/duane/dproj/CS344
+OLDPWD = /home/duane/dproj
 # default
 .VARIABLES := 
 # automatic
@@ -274,6 +274,7 @@ NVM_DIR = /home/duane/.nvm
 GDK_BACKEND = x11
 # environment
 LC_PAPER = en_US.UTF-8
+ 
 # environment
 LC_IDENTIFICATION = en_US.UTF-8
 # environment
@@ -301,7 +302,6 @@ DBGFLAGS := -g
 # environment
 CONDA_PYTHON_EXE = /home/duane/miniconda3/bin/python
 # environment
- 
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
 GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/f7d6d9d1_13e9_4e33_99dd_8056d1ba5bf9
@@ -334,7 +334,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 754184
+VSCODE_PID = 776692
 # makefile (from 'Makefile', line 29)
 DISTCLEAN_LIST := obj/utilities.o obj/signal_handling.o obj/built_ins.o obj/process_mgmt.o obj/main.o obj/command.o debug/utilities.o debug/signal_handling.o debug/built_ins.o debug/process_mgmt.o debug/main.o debug/command.o
 # environment
@@ -348,10 +348,10 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66311, inode 33949978): 12 files, no impossibilities.
-# src (device 66311, inode 33950401): 14 files, no impossibilities.
+# . (device 66311, inode 27400312): 13 files, no impossibilities.
+# src (device 66311, inode 27400477): 14 files, no impossibilities.
 
-# 26 files, no impossibilities in 2 directories.
+# 27 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
@@ -370,7 +370,7 @@ debug/%.o: src/%.c*
 obj/process_mgmt.o: src/process_mgmt.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'process_mgmt'
-#  Last modified 2021-12-20 11:45:02.392417097
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 43):
@@ -385,7 +385,7 @@ debug/main.o:
 # Not a target:
 src/command.c:
 #  Implicit rule search has been done.
-#  Last modified 2020-11-03 21:53:38.158095634
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 
@@ -411,7 +411,7 @@ debug/built_ins.o:
 obj/signal_handling.o: src/signal_handling.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'signal_handling'
-#  Last modified 2021-12-20 11:45:02.332417159
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 43):
@@ -429,7 +429,7 @@ distclean:
 obj/main.o: src/main.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'main'
-#  Last modified 2021-12-20 11:45:02.412417077
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 43):
@@ -438,13 +438,13 @@ obj/main.o: src/main.c
 # Not a target:
 src/process_mgmt.c:
 #  Implicit rule search has been done.
-#  Last modified 2020-11-03 22:19:02.617341511
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 
 bin/smallsh: obj/utilities.o obj/signal_handling.o obj/built_ins.o obj/process_mgmt.o obj/main.o obj/command.o
 #  Implicit rule search has not been done.
-#  Last modified 2021-12-20 11:45:02.460417027
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 40):
@@ -453,7 +453,7 @@ bin/smallsh: obj/utilities.o obj/signal_handling.o obj/built_ins.o obj/process_m
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-12-20 11:37:44.80557251
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 
@@ -472,7 +472,7 @@ debug/utilities.o:
 obj/built_ins.o: src/built_ins.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'built_ins'
-#  Last modified 2021-12-20 11:45:02.36041713
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 43):
@@ -481,7 +481,7 @@ obj/built_ins.o: src/built_ins.c
 # Not a target:
 src/signal_handling.c:
 #  Implicit rule search has been done.
-#  Last modified 2020-11-03 22:25:07.274069683
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 
@@ -500,14 +500,14 @@ debug/smallsh: debug/utilities.o debug/signal_handling.o debug/built_ins.o debug
 # Not a target:
 src/main.c:
 #  Implicit rule search has been done.
-#  Last modified 2021-12-18 18:47:41.069471902
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 
 obj/utilities.o: src/utilities.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'utilities'
-#  Last modified 2021-12-20 11:45:02.308417184
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 43):
@@ -516,7 +516,7 @@ obj/utilities.o: src/utilities.c
 # Not a target:
 src/built_ins.c:
 #  Implicit rule search has been done.
-#  Last modified 2020-11-03 22:35:44.979526609
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 
@@ -558,14 +558,15 @@ debug/process_mgmt.o:
 # Not a target:
 src/utilities.c:
 #  Implicit rule search has been done.
-#  Last modified 2020-11-03 22:28:55.498521786
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
+ 
 
 obj/command.o: src/command.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'command'
-#  Last modified 2021-12-20 11:45:02.444417042
+#  Last modified 2021-12-20 14:19:26.018153202
 #  File has been updated.
 #  Successfully updated.
 #  recipe to execute (from 'Makefile', line 43):
@@ -585,12 +586,12 @@ debug/signal_handling.o:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 63 / storage = 756 B / avg = 12 B
-# current buf: size = 8162 B / used = 756 B / count = 63 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 65 / storage = 766 B / avg = 11 B
+# current buf: size = 8162 B / used = 766 B / count = 65 / avg = 11 B
 
-# strcache performance: lookups = 105 / hit rate = 40%
+# strcache performance: lookups = 106 / hit rate = 38%
 # hash-table stats:
-# Load=63/8192=1%, Rehash=0, Collisions=2/105=2%
-# Finished Make data base on Mon Dec 20 11:52:11 2021
+# Load=65/8192=1%, Rehash=0, Collisions=2/106=2%
+# Finished Make data base on Mon Dec 20 14:21:07 2021
 
  

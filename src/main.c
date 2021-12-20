@@ -15,19 +15,19 @@
 
 int main(void) {
 
-    // This retains value of 1 until built-in exit command is called.
+    // run_flag = 1 until built-in exit command is called
     int run_flag = 1;
 
-    // get shell pid and convert to a string (for use in variable expansion)
+    // get shell pid and convert to a string for use in variable expansion
     pid_t shell_pid = getpid();
     char* shell_pid_str = malloc_atoi(shell_pid);
 
     // set signal handlers for the shell
     set_shell_sighandlers();
 
-    // Shell continues prompting and executing commnads until run_flag becomes 0
-    // The non-exit built-in functions as well as calls to launch a child process
-    // all return 1. The built-in exit function returns 0
+/*  The following while loop continues prompting and executing commnads until
+    run_flag is changed to 0. Non-exit built-in functions as well as calls to
+    launch  */
     while (run_flag) {
 
         // display the prompt
