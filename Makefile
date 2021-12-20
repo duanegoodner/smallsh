@@ -1,3 +1,5 @@
+# Makefile template from: https://github.com/TheNetAdmin/Makefile-Templates
+
 # tool macros
 CC := gcc
 CCFLAGS :=
