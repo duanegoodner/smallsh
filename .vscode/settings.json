@@ -1,5 +1,5 @@
 {
-    "files.exclude": {
-        "**/.o": true
-    }
+    // "files.exclude": {
+    //     "**/.o": true
+    // }
 }

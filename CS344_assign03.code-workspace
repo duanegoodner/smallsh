@@ -5,8 +5,22 @@
 		}
 	],
 	"settings": {
-		"files.exclude": {
-			"**/*.o": true
-		}
-	}
+		"makefile.launchConfigurations": [
+			{
+				"cwd": "/home/duane/dproj/CS344/assign03b/bin",
+				"binaryPath": "/home/duane/dproj/CS344/assign03b/bin/smallsh",
+				"binaryArgs": []
+			},
+			{
+				"cwd": "/home/duane/dproj/CS344/assign03b/debug",
+				"binaryPath": "/home/duane/dproj/CS344/assign03b/debug/smallsh",
+				"binaryArgs": []
+			}
+		]
+	},
+	// "settings": {
+	// 	"files.exclude": {
+	// 		"**/*.o": true
+	// 	}
+	// }
 }

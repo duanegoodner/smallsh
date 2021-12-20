@@ -1,0 +1,12 @@
+make debug/smallsh --dry-run --keep-going --print-directory
+make: Entering directory '/home/duane/dproj/CS344/assign03b'
+gcc  -c -g -o debug/utilities.o src/utilities.c
+ 
+gcc  -c -g -o debug/signal_handling.o src/signal_handling.c
+gcc  -c -g -o debug/built_ins.o src/built_ins.c
+gcc  -c -g -o debug/process_mgmt.o src/process_mgmt.c
+gcc  -c -g -o debug/main.o src/main.c
+gcc  -c -g -o debug/command.o src/command.c
+gcc  -g debug/utilities.o debug/signal_handling.o debug/built_ins.o debug/process_mgmt.o debug/main.o debug/command.o -o debug/smallsh
+make: Leaving directory '/home/duane/dproj/CS344/assign03b'
+ 

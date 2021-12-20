@@ -5,6 +5,44 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug bin smallsh",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/smallsh",  //edit path as needed
+      "args": [], //edit input as needed
+      "stopAtEntry": true,
+      "cwd": "${workspaceFolder}/bin",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+  },
+    {
+      "name": "Debug debug smallsh",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/debug/smallsh",  //edit path as needed
+      "args": [], //edit input as needed
+      "stopAtEntry": true,
+      "cwd": "${workspaceFolder}/debug",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+  },
+    {
       "name": "Debug src smallsh",
       "type": "cppdbg",
       "request": "launch",
