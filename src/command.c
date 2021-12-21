@@ -49,6 +49,7 @@ struct command* get_command() {
     // convert args of command struct as needed based on variable expansion rules
     char* expand_repl = malloc_atoi(getpid());
     expand_var(curr_command, VAR_EXPAND, expand_repl);
+    free(expand_repl);
 
     return curr_command;
 }
@@ -98,28 +99,28 @@ struct command *build_unexpanded_command(char** inputs, int *n_inputs) {
     // To be cautious, cast the boolean .background to an int before subtraction.
     index_limit = index_limit - (int) curr_command->background;
 
-    // populste command structs arg_count and input/output redirect filename members
+    // populate command structs arg_count and input/output redirect filename members
     get_argc_and_redirs(curr_command, inputs, index_limit);
 
     // populate command structs args array using appropriate elements of inputs array
-    populate_args(curr_command, inputs);
+    populate_args(curr_command->arg_count, curr_command->args, inputs);
 
     return curr_command;
 }
 
 // takes appropriate elemnts of inputs array and copies them to commmand structs
 // args array
-void populate_args(struct command* curr_command, char** inputs) {
+void populate_args(int arg_count, char** args, char** inputs) {
 
     // total number of copy operations = command structs arg_count
-    for (int index = 0; index < curr_command->arg_count; index++) {
+    for (int index = 0; index < arg_count; index++) {
 
         // for each entry that will be copied, allocate new memory, and have and
         // element of command.args point to it.
-        curr_command->args[index] = calloc(strlen(inputs[index]), sizeof(char));
+        args[index] = calloc(strlen(inputs[index]), sizeof(char));
 
         // copy string from inputs array to command.args array
-        strcpy(curr_command->args[index], inputs[index]);
+        strcpy(args[index], inputs[index]);
     }
 
     // enter NULL as final element (that we care about) in command.args
@@ -128,7 +129,7 @@ void populate_args(struct command* curr_command, char** inputs) {
     // to look in this array because command has an n_args member. Previouslly tried
     // using dynamica array for .args, but ran into problems when trying to free memory.
     // May revisit dyanamic array for args in future version.
-    curr_command->args[curr_command->arg_count] = NULL;
+    args[arg_count] = NULL;
 }
 
 // Counts number of elements in inputs array that need to be copied into args, and gets

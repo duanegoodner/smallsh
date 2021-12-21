@@ -22,7 +22,7 @@ char* get_input_line(void);
 char** parse_input_line(char *curr_line, int *n_inputs);
 struct command *build_unexpanded_command(char** inputs, int *n_inputs);
 void get_argc_and_redirs(struct command* curr_command, char** inputs, int index_limit);
-void populate_args(struct command* curr_command, char** inputs);
+void populate_args(int arg_count, char** args, char** inputs);
 void expand_var(struct command* curr_command, char* old_str, char* new_str);
 
 bool is_comment(char** inputs);
