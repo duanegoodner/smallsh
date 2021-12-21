@@ -7,13 +7,10 @@
 #include <fcntl.h>
 #include "command.h"
 #include "utilities.h"
+#include "definitions.h"
 #include "globals.h"
 #include "process_mgmt.h"
 #include "signal_handling.h"
-
-#define NO_FG_RUN_YET "exit value"
-#define LAST_FG_TERMINATED "The last foreground process was terminated by signal"
-#define LAST_FG_EXITED "exit value"
 
 // initialize linked list where commands that get launched as background processes are stored
 struct command *bg_list_head = NULL;
@@ -81,7 +78,7 @@ void get_fg_status(int child_status) {
 // Prnigs exit/termination status of last foreground process and resets global termination var to false.
 void force_report_last_fg_end(void) {
     printf("%s %d\n", last_fg_endmsg, last_fg_endsig);
-    last_fg_terminated = false; 
+    last_fg_terminated = false;
 }
 
 // adds command struct to linked list that stores commands running in background
@@ -91,7 +88,7 @@ void add_bg_node(struct command *curr_command) {
         bg_list_tail = curr_command;
     } else {
         bg_list_tail->next = curr_command;
-        bg_list_tail = bg_list_tail->next; 
+        bg_list_tail = bg_list_tail->next;
     }
 }
 
@@ -118,7 +115,7 @@ void remove_bgpid_node(struct command* curr_node, struct command* prev_node) {
         curr_node->next = NULL; // unnecessary???
         if (curr_node == bg_list_head) {
             bg_list_tail = prev_node;
-        } 
+        }
     }
     free_command(curr_node);
 }
@@ -127,7 +124,7 @@ void remove_bgpid_node(struct command* curr_node, struct command* prev_node) {
 #define BG_DONE_MSG_END " is done: "
 #define BG_EXIT_MSG "exit value "
 #define BG_TERM_MSG "terminated by signal "
-// called during iteration through bg process LL. checks status of each node 
+// called during iteration through bg process LL. checks status of each node
 // in list, and if the process corresponding to that node has ended, kills process
 // and removes node from the list
 void remove_zombies(void) {
@@ -142,13 +139,13 @@ void remove_zombies(void) {
         if (waitpid(curr_node->process_id, &bgchild_status, WNOHANG)) {
             char* process_id_str = malloc_atoi(curr_node->process_id);
             int process_id_str_len = strlen_int(curr_node->process_id);
-            
+
             // if it is done report to standard out.
             write(STDOUT_FILENO, BG_DONE_MSG_START, 16);
             write(STDOUT_FILENO, process_id_str, process_id_str_len);
             write(STDOUT_FILENO, BG_DONE_MSG_END, 10);
             free(process_id_str);
-            
+
             // then check if exited normally
             if (WIFEXITED(bgchild_status)) {
                 int exit_status = WEXITSTATUS(bgchild_status);
@@ -161,12 +158,12 @@ void remove_zombies(void) {
                 write(STDOUT_FILENO, NEWLINE_C_PROMPT, 3);
                 free(exit_status_str);
 
-            // if process did not exit normally, get termination status 
+            // if process did not exit normally, get termination status
             } else {
                 int term_signal = WTERMSIG(bgchild_status);
                 char* term_signal_str = malloc_atoi(term_signal);
                 int term_signal_str_len = strlen_int(term_signal);
-                
+
                 // report termination status to standard out
                 write(STDOUT_FILENO, BG_TERM_MSG, 21);
                 write(STDOUT_FILENO, term_signal_str, term_signal_str_len);
@@ -178,7 +175,7 @@ void remove_zombies(void) {
             dead_node = curr_node;
             curr_node = curr_node->next;
             remove_bgpid_node(dead_node, prev_node);  // this function calls free(dead_node)
-            
+
             // if we did kill a process, we're already at next node to check, so no need to advance
             // call command that advances to next node
             continue;
@@ -216,7 +213,7 @@ void set_fgchild_redirect(struct command *curr_command) {
         }
 }
 
-// Launches a child process. 
+// Launches a child process.
 // REFERENCE: Structure of this function borrows heavily from code provided in course module:
 // https://canvas.oregonstate.edu/courses/1784217/modules/items/19893097
 int launch_child_proc(struct command* curr_command) {
@@ -228,7 +225,7 @@ int launch_child_proc(struct command* curr_command) {
         perror("fork() failed.");
         exit(1);
     } else if (curr_command->process_id == 0) {
-        
+
         // child branch
         // set sig handlers
         if (bg_launch_allowed && curr_command->background) {
@@ -238,10 +235,10 @@ int launch_child_proc(struct command* curr_command) {
             set_fgchild_sighandlers();
             set_fgchild_redirect(curr_command);
         }
-        
+
         // call execvp using command struct's args array
         execvp(curr_command->args[0], curr_command->args);
-        
+
         // handle error if new program did not load/start
         fprintf(stderr, "%s: no such file or directory\n", curr_command->args[0]);
         exit(1);
@@ -250,7 +247,7 @@ int launch_child_proc(struct command* curr_command) {
         // if process was launched as a background process, start tracking it
         if (bg_launch_allowed && curr_command->background) {
             start_tracking_bg(curr_command);
-        
+
         } else {
             // if process was launched in foreground, wait for it, and report status if
             // terminates (rather than exits)
@@ -260,12 +257,12 @@ int launch_child_proc(struct command* curr_command) {
                 force_report_last_fg_end();
             }
 
-            // free memory immediately if process was a foreground process (which is now done) 
+            // free memory immediately if process was a foreground process (which is now done)
             free_command(curr_command);
         }
     }
 
-    // return 1 so main while loop continues 
+    // return 1 so main while loop continues
     return 1;
 
 }

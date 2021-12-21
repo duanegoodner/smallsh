@@ -4,11 +4,10 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include "globals.h"
+#include "definitions.h"
 #include "process_mgmt.h"
 #include "signal_handling.h"
 
-#define ENTER_FG_ONLY_MSG "\nEntering foreground-only mode (& is now ignored)\n"
-#define EXIT_FG_ONLY_MSG "\nExiting foreground-only mode\n"
 // handle SIGSTP by toggling global bg_launch_allowed on/off and reporting the change
 // to standard out.
 void handle_SIGTSTP (int signo) {
@@ -18,7 +17,7 @@ void handle_SIGTSTP (int signo) {
     } else {
         write(STDOUT_FILENO, EXIT_FG_ONLY_MSG, 30);
     }
-    write(STDOUT_FILENO, C_PROMPT, 2);       
+    write(STDOUT_FILENO, C_PROMPT, 2);
 }
 
 // handles SIGCHLD by checking for and removing zombie processes
@@ -28,8 +27,8 @@ void handle_SIGCHLD (int signo) {
 
 // sets signal handlers for the shell process
 void set_shell_sighandlers() {
-    
-    //ignore SIGINT 
+
+    //ignore SIGINT
     struct sigaction ignore_action = {0};
     ignore_action.sa_handler = SIG_IGN;
     sigaction(SIGINT, &ignore_action, NULL);
@@ -40,7 +39,7 @@ void set_shell_sighandlers() {
     SIGTSTP_action.sa_flags = SA_RESTART;
     sigaction(SIGTSTP, &SIGTSTP_action, NULL);
 
-    // register SIGCHLD handler 
+    // register SIGCHLD handler
     struct sigaction SIGCHLD_action = {0};
     SIGCHLD_action.sa_handler = handle_SIGCHLD;
     SIGCHLD_action.sa_flags = SA_RESTART;

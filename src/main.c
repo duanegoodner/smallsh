@@ -5,12 +5,11 @@
 #include <sys/types.h>
 #include "command.h"
 #include "utilities.h"
+#include "definitions.h"
 #include "globals.h"
 #include "built_ins.h"
 #include "process_mgmt.h"
 #include "signal_handling.h"
-
-#define VAR_EXPAND "$$"
 
 
 int main(void) {
@@ -18,28 +17,21 @@ int main(void) {
     // run_flag = 1 until built-in exit command is called
     int run_flag = 1;
 
-    // get shell pid and convert to a string for use in variable expansion
-    pid_t shell_pid = getpid();
-    char* shell_pid_str = malloc_atoi(shell_pid);
-
     // set signal handlers for the shell
     set_shell_sighandlers();
 
-/*  The following while loop continues prompting and executing commnads until
-    run_flag is changed to 0. Non-exit built-in functions as well as calls to
-    launch  */
+    /* while loop continues prompting and executing commnads until run_flag is
+    changed to 0. Non-exit built-in functions as well as calls to launch new
+    processes return 1. */
     while (run_flag) {
 
         // display the prompt
         printf(C_PROMPT);
         fflush(stdout);
 
-        // Build a command struct based on user input and variable expansion.
-        // If user enters blank line or comment, NULL is returned.
-        // Note: Could provide support for additonal variable expansion by
-        // modifying get_command to handle two array args instead of just a
-        // pair of strings.
-        struct command *curr_command = get_command(VAR_EXPAND, shell_pid_str);
+        /* Build a command struct based on user input and variable expansion.
+        If user enters blank line or comment, NULL is returned. */
+        struct command *curr_command = get_command();
 
         // Check for empty line or comment character
         if (curr_command == NULL) {

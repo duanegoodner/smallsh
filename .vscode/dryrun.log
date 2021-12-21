@@ -1,12 +1,5 @@
-make --dry-run --always-make --keep-going --print-directory
+make debug/smallsh --dry-run --keep-going --print-directory
 make: Entering directory '/home/duane/dproj/smallsh'
-mkdir -p bin obj debug
-gcc  -c -o obj/utilities.o src/utilities.c
-gcc  -c -o obj/signal_handling.o src/signal_handling.c
-gcc  -c -o obj/built_ins.o src/built_ins.c
-gcc  -c -o obj/process_mgmt.o src/process_mgmt.c
-gcc  -c -o obj/main.o src/main.c
-gcc  -c -o obj/command.o src/command.c
-gcc  -o bin/smallsh obj/utilities.o obj/signal_handling.o obj/built_ins.o obj/process_mgmt.o obj/main.o obj/command.o
+make: 'debug/smallsh' is up to date.
 make: Leaving directory '/home/duane/dproj/smallsh'
  
