@@ -7,34 +7,31 @@
 #include "command.h"
 #include "utilities.h"
 
+/*
+    FUNCTION: get_command
+    @desc: gets input from command line & converts to command struct
+    @returns: pointer to a command struct in heap
+ */
+struct command* get_command(void) {
 
-// Gets input entered by user, converts to a command struct.
-struct command* get_command() {
-
-    // get command line input and convert to input struct
     struct input* curr_input = malloc(sizeof(struct input));
-    char* curr_line = get_input_line();
-    populate_input_struct(curr_line, curr_input);
-
-    // curr_input->parsed_words = parse_input_line(curr_line, &curr_input->num_words);
-
-    // Values of command structure members will be initialized and/or set later
     struct command *curr_command = malloc(sizeof(struct command));
 
-    // check if user simply entered a blank line or a comment
-    if (curr_input->num_words == 0 || (is_comment(curr_input->parsed_words))) {
+    char* curr_line = get_input_line();
 
-        // if yes, return NULL value of command to main
+    // convert raw line of input to an input struct in heap
+    populate_input_struct(curr_line, curr_input);
+
+    // if input is blank line or comment, command is NULL
+    if (curr_input->num_words == 0 || (is_comment(curr_input->parsed_words))) {
         curr_command = NULL;
         return curr_command;
-
-    // if not a blank line or command, populate members of command struct
+    // if not a blank line or command, populate command struct data members
     } else {
         populate_command(curr_command, curr_input);
     }
 
-    /* Unsure of correct order to free since curr_input.parsed points to various
-    parts of block that curr_line points to, but order below seems to work.  */
+    // free all heap items except command struct
     free(curr_line);
     free(curr_input->parsed_words);
     free(curr_input);
@@ -42,6 +39,14 @@ struct command* get_command() {
     return curr_command;
 }
 
+/*
+    FUNCTION: populate_input_struct
+    @desc: uses info in curr_line string to populate an input struct
+    @param: curr_line = pointer to string entered at command line
+    @param: curr_input = pointer to input struct to be populated
+    @returns: none
+    @unfreed heap items: curr_input.parsed_words
+ */
 void populate_input_struct(char *curr_line, struct input* curr_input) {
     int word_index = 0;
 
@@ -58,14 +63,22 @@ void populate_input_struct(char *curr_line, struct input* curr_input) {
 
     curr_input->num_words = word_index;
 
+    // reduce size of curr_input.parsed words down to what's used
     curr_input->parsed_words = realloc(
         curr_input->parsed_words, sizeof(
             curr_input->parsed_words) * (word_index + 1));
+
+    // having a NULL element at end helps with debugging and/or execvp later
     curr_input->parsed_words[word_index] = NULL;
 }
 
-// Read a line of input entered at command line, and return a pointer to dynamicall allocated memory
-// where this data are stored.
+/*
+    FUNCTION: get_input_line
+    @desc: reads line of input entered at command line, and saves in heap
+    returns pointer.
+    @returns: curr_line = pointer to saved string in heap.
+    @unfreed heap items: curr_line
+ */
 char* get_input_line(void) {
     char *curr_line = NULL;
     size_t len = 0;
@@ -74,50 +87,29 @@ char* get_input_line(void) {
     return curr_line;
 }
 
-// Takes an input string (probably obtained by getline()), counts the number of whitespace delimited
-// elements, and returns an array of tokens pointing to each whitespace delimited element of the
-// input string.
-char** parse_input_line(char *curr_line, int *n_inputs) {
-    int index = 0;
-    // Start out with array capable of handling max input size in specs.
-    // The +7 is for possible non-arg elements.
-    char** inputs = malloc(MAX_ARGS + 7);
-    char* token;
-
-    // tokenize the input string and count the number of tokens
-    token = strtok(curr_line, DELIMITERS);
-    while (token != NULL) {
-        inputs[index] = token;
-        token = strtok(NULL, DELIMITERS);
-        index++;
-    }
-
-    // place value corresponding to number of tokens in integer pointed to by
-    *n_inputs = index;
-
-    // trim size of inputs (dynamic array of char pointers) to only whats's needed
-    inputs = realloc(inputs, index + 1);
-
-    // set final slement of inputs to NULL for compatibility with execvp
-    inputs[index] = NULL;
-
-    return(inputs);
-}
-
+/*
+    FUNCTION: populate_command
+    @desc: populates command struct with info from input struct. new copies of
+    heap items in curr_input are created (so generally OK to free curr_input
+    after calling).
+    @param: curr_command = pointer to command struct to be populated
+    @param: curr_input = pointer to input struct providing the info
+    @returns: none
+    @possible (new) unfreed heap items: curr_command.args,
+    curr_command.input_redirect, curr_command.output_redirect
+ */
 void populate_command(struct command* curr_command, struct input* curr_input) {
 
     // index_limit determines how many items get copied into command args
     int index_limit = curr_input->num_words;
 
-    // background commands will be in linked list for tracking
-    // since only need .next for bg procs, could use smaller struct here
+    // background commands get saved in linked list, so need a .next member
     curr_command->next = NULL;
 
     // initialize pid to value that can't be confused with real pid
     curr_command->process_id = -5;
 
-    // will update these later if have redirects. initializing to NULL helps
-    // avoid double-free
+    // these get updated later if needed. initializing to NULL to avoid double free
     curr_command->input_redirect = NULL;
     curr_command->output_redirect = NULL;
 
@@ -135,76 +127,84 @@ void populate_command(struct command* curr_command, struct input* curr_input) {
     free(expand_repl);
 }
 
-// takes appropriate elemnts of inputs array and copies them to commmand structs
-// args array
-void populate_args(int arg_count, char** args, char** inputs) {
+/*
+    FUNCTION: populate_args
+    @desc: uses arg_count to determine which items in parsed_words are args,
+    and copies them to args.
+    @param: arg_count = number of args in the command (does not include redirect
+    or background syntax)
+    @args: pointer to array of string pointers for command args
+    @parsed_words: pointer to array of string pointers (most of, but not all,
+    of which are command args)
+    @new unfreed head items: each element of args points to newly allocated mem
+ */
+void populate_args(int arg_count, char** args, char** parsed_words) {
 
     // total number of copy operations = command structs arg_count
-    for (int index = 0; index < arg_count; index++) {
+    for (int copy_index = 0; copy_index < arg_count; copy_index++) {
 
-        // for each entry that will be copied, allocate new memory, and have and
-        // element of command.args point to it.
-        args[index] = calloc(strlen(inputs[index]), sizeof(char));
+        // for each entry to be copied, allocate new memory
+        args[copy_index] = calloc(strlen(parsed_words[copy_index]), sizeof(char));
 
         // copy string from inputs array to command.args array
-        strcpy(args[index], inputs[index]);
+        strcpy(args[copy_index], parsed_words[copy_index]);
     }
 
     // enter NULL as final (used) element in command.args for use with execvp
     args[arg_count] = NULL;
 }
 
-// Counts number of elements in inputs array that need to be copied into args, and gets
-// filenames of input/output redirects if specified. These pieces of info are entered
-// in corresponding members of command struct.
-void get_argc_and_redirs(struct command* curr_command, char** inputs, int index_limit) {
+/*
+    FUNCTION: get_argc_and_redirs
+    @desc: Counts number of elements in inputs array that need to be copied
+    into args, and gets filenames of input/output redirects if specified. These
+    pieces of info are entered in corresponding members of command struct. Combining
+    arc counting with getting redirect seems a bit messy, but doing one automatically
+    gives the other.
+    @param: curr_command = pointer to command structure being populated
+    @param: parsed_words = pointer to array of words (most but not all of which
+    are command args)
+ */
+void get_argc_and_redirs(struct command* curr_command, char** parsed_words, int index_limit) {
 
     // initialize arg counter to zero
     int arg_count = 0;
 
-    // Gather redirect info and count number of actual args.
-    // Redirect symbols and filenames will not go into args.
-    // Start by iterating over each element of inputs (except for final element if it is
-    // and '&' used to indicate background process)
     for (int index = 0; index < index_limit; index++) {
-        // If we find an input redirect symbol in inputs, set the next elements of inputs
-        // to be the input redirect path, and advance loop counter by an exta unit.
-        if (is_redirect_in(inputs[index])) {
-            curr_command->input_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
-            strcpy(curr_command->input_redirect, inputs[index + 1]);
+        // If find redirect symbol, set next element as input & advance counter extra unit
+        if (is_redirect_in(parsed_words[index])) {
+            curr_command->input_redirect = calloc(strlen(parsed_words[index + 1]), sizeof(char));
+            strcpy(curr_command->input_redirect, parsed_words[index + 1]);
             index++;
-        // Execute analogous instructions if we find and output redirect symbol
-        } else if (is_redirect_out(inputs[index])) {
-            curr_command->output_redirect = calloc(strlen(inputs[index + 1]), sizeof(char));
-            strcpy(curr_command->output_redirect, inputs[index + 1]);
+        // Analogous procedure if we find and output redirect symbol
+        } else if (is_redirect_out(parsed_words[index])) {
+            curr_command->output_redirect = calloc(strlen(parsed_words[index + 1]), sizeof(char));
+            strcpy(curr_command->output_redirect, parsed_words[index + 1]);
             index++;
-        // If current element of inputs array is not for input/output redirect, it counts
-        // as an arg (note we already avoid incorrectly counting an & at end of inputs
-        // by setting index_limit)
+        // If current element of inputs array is not for redirection, it's  an arg
         } else {
             arg_count++;
         }
     }
-    // Set command's .arg_count member equal to counter in current function.
-    // Could simplifiy by just using curr_command.arg_count inside loop.
     curr_command->arg_count = arg_count;
 }
 
-// Takes a populated command structure and modifies elements of args as needed based on
-// variable expansion specification. In current implementation, just have one expansion
-// rule. old_str = substring to be replaced and news_str = substing to replace with.
+/*
+    @desc: Takes a populated command structure and modifies elements of args as needed
+    based on a variable expansion rule.
+    @param: curr_command = pointer to command struct that may need variable expansion
+    @param: old_str = string pattern that gets replaced
+    @param: new_str = string pattern thta replaces the old one
+
+ */
 void expand_var(struct command* curr_command, char* old_str, char* new_str) {
 
-    // make sure we don't try this on a NULL command. Program structure should prevent this from
-    // happening, but still good to be safe.
     if (curr_command != NULL) {
-        // vist each element of command's .args member
         for (int arg_index = 0; arg_index < curr_command->arg_count; arg_index++) {
-            // use C-library strstr function to check if old_str is a substring of arg element
+
+            // check if old_str is a substring of arg element
             char* ss_ptr = strstr(curr_command->args[arg_index], old_str);
-            // if there is a substring match, strstr returns a pointer to start of substring in
-            // the element of input. If no match, returns NULL. If there is a match, use dsubstr_replace_all
-            // to create modified args element.
+            // if match if found, execute the replacement
             if (ss_ptr != NULL){
                 curr_command->args[arg_index] = dsubstr_replace_all(curr_command->args[arg_index], old_str, new_str);
             }
@@ -212,29 +212,41 @@ void expand_var(struct command* curr_command, char* old_str, char* new_str) {
     }
 }
 
-
-
-
-
-// checks if element of inputs is an output redirect symbol
-bool is_redirect_out(char* input) {
-    if (strcmp(input, REDIRECT_OUT)) {
+/*
+    FUNCTION: is_redirect_out
+    @desc: checks string is an output redirect symbol
+    @param: word = pointer to the string being checked
+    @returns: true if word is a redirect, false otherwise
+ */
+bool is_redirect_out(char* word) {
+    if (strcmp(word, REDIRECT_OUT)) {
         return false;
     } else {
         return true;
     }
 }
 
-// checks if element of inputs is an input redirect symbol
-bool is_redirect_in(char* input) {
-    if (strcmp(input, REDIRECT_IN)) {
+/*
+    FUNCTION: is_redirect_in
+    @desc: checks string is an input redirect symbol
+    @param: word = pointer to the string being checked
+    @returns: true if word is an output redirect, false otherwise
+ */
+bool is_redirect_in(char* word) {
+    if (strcmp(word, REDIRECT_IN)) {
         return false;
     } else {
         return true;
     }
 }
 
-// checks if final element of inputs is a background process indicator
+/*
+    FUNCTION: bg_command_check
+    @desc: checks if final element in array of strings is the background
+    process symbol.
+    @param: inputs = pointer to array of string pointers being checked
+    @returns: true if final element is the background symbol, false otherwise
+ */
 bool bg_command_check(char** inputs, int n_inputs) {
     if (strcmp(inputs[n_inputs - 1], BG_FLAG)) {
         return false;
@@ -246,6 +258,15 @@ bool bg_command_check(char** inputs, int n_inputs) {
 // frees memory of a command structure.
 // Note: since currently using static array for .args, only need to free elements of args,
 // and do not need to free args array itself (that gets taken care of by the line 'free(command)' )
+
+/*
+    FUNCTION: free_command
+    @desc: Frees a command structure from heap memory. First frees memory
+    pointed to by data members, then frees struct itself. Note that some
+    members are not heap pointers so don't require free. Use NULL guards to
+    avoid double-free(). Called in process_mgmt module.
+    @param: curr_command = pointer to command struct being freed
+*/
 void free_command(struct command* curr_command) {
 
     // Make sure we don't try to free a NULL command, otherwise may have double free() fault.
@@ -270,7 +291,12 @@ void free_command(struct command* curr_command) {
     }
 }
 
-// checks if first element of input string incidates that command is a comment
+/*
+    FUNCTION: is_comment
+    @desc: checks if first character in array of strings is a comment char.
+    @param: inputs = pointer to array of string pointers being checked
+    @returns: true if first char is comment char, false otherwise
+ */
 bool is_comment(char **inputs) {
     if (inputs[0][0] == COMMENT_CHAR) {
         return true;

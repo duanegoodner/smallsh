@@ -26,7 +26,6 @@ void populate_input_struct(char *curr_line, struct input* curr_input);
 void populate_command(struct command* curr_command, struct input* curr_input);
 struct command *get_command();
 char* get_input_line(void);
-char** parse_input_line(char *curr_line, int *n_inputs);
 void get_argc_and_redirs(struct command* curr_command, char** inputs, int index_limit);
 void populate_args(int arg_count, char** args, char** inputs);
 void expand_var(struct command* curr_command, char* old_str, char* new_str);
