@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Dec 21 18:07:51 2021
+# Make data base, printed on Thu Dec 23 13:54:43 2021
 
 # Variables
 
@@ -225,7 +225,7 @@ GNOME_SHELL_SESSION_MODE = ubuntu
 # makefile (from 'Makefile', line 21)
 TARGET_DEBUG := debug/smallsh
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-0df4a591-f5d9-482c-a32f-5855eb99a2e3.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-48e1e6d5-6e24-4073-8127-767bb28ab11c.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -303,18 +303,18 @@ CONDA_PYTHON_EXE = /home/duane/miniconda3/bin/python
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/bdd18fd9_7588_42a8_be78_d8218cbc81e9
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/057fb4fa_db61_4bcc_b08e_b5b4092be012
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.103
+ 
+GNOME_TERMINAL_SERVICE = :1.1205
 # default
 SUFFIXES := 
 # environment
 SNAP_REEXEC = 
 # environment
 _CE_M = 
- 
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
@@ -334,7 +334,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 6479
+VSCODE_PID = 131484
 # makefile (from 'Makefile', line 29)
 DISTCLEAN_LIST := obj/utilities.o obj/signal_handling.o obj/built_ins.o obj/process_mgmt.o obj/main.o obj/command.o debug/utilities.o debug/signal_handling.o debug/built_ins.o debug/process_mgmt.o debug/main.o debug/command.o
 # environment
@@ -348,10 +348,10 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66311, inode 27400312): 14 files, no impossibilities.
+# . (device 66311, inode 27400312): 16 files, no impossibilities.
 # src (device 66311, inode 27400477): 15 files, no impossibilities.
 
-# 29 files, no impossibilities in 2 directories.
+# 31 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
@@ -557,12 +557,12 @@ debug/signal_handling.o:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 56 / storage = 649 B / avg = 11 B
-# current buf: size = 8162 B / used = 649 B / count = 56 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 58 / storage = 657 B / avg = 11 B
+# current buf: size = 8162 B / used = 657 B / count = 58 / avg = 11 B
 
-# strcache performance: lookups = 93 / hit rate = 39%
+# strcache performance: lookups = 95 / hit rate = 38%
 # hash-table stats:
-# Load=56/8192=1%, Rehash=0, Collisions=2/93=2%
-# Finished Make data base on Tue Dec 21 18:07:51 2021
+# Load=58/8192=1%, Rehash=0, Collisions=2/95=2%
+# Finished Make data base on Thu Dec 23 13:54:43 2021
 
  

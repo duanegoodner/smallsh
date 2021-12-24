@@ -8,14 +8,15 @@
 #include "utilities.h"
 
 
-
 // Gets input entered by user, converts to a command struct.
 struct command* get_command() {
 
     // get command line input and convert to input struct
     struct input* curr_input = malloc(sizeof(struct input));
     char* curr_line = get_input_line();
-    curr_input->parsed_words = parse_input_line(curr_line, &curr_input->num_words);
+    populate_input_struct(curr_line, curr_input);
+
+    // curr_input->parsed_words = parse_input_line(curr_line, &curr_input->num_words);
 
     // Values of command structure members will be initialized and/or set later
     struct command *curr_command = malloc(sizeof(struct command));
@@ -39,6 +40,68 @@ struct command* get_command() {
     free(curr_input);
 
     return curr_command;
+}
+
+void populate_input_struct(char *curr_line, struct input* curr_input) {
+    int word_index = 0;
+
+    curr_input->parsed_words = malloc(MAX_ARGS + MAX_EXTRA_WORDS);
+    char* token;
+
+    // tokenize the input string and count the number of tokens
+    token = strtok(curr_line, DELIMITERS);
+    while (token != NULL) {
+        curr_input->parsed_words[word_index] = token;
+        token = strtok(NULL, DELIMITERS);
+        word_index++;
+    }
+
+    curr_input->num_words = word_index;
+
+    curr_input->parsed_words = realloc(
+        curr_input->parsed_words, sizeof(
+            curr_input->parsed_words) * (word_index + 1));
+    curr_input->parsed_words[word_index] = NULL;
+}
+
+// Read a line of input entered at command line, and return a pointer to dynamicall allocated memory
+// where this data are stored.
+char* get_input_line(void) {
+    char *curr_line = NULL;
+    size_t len = 0;
+    ssize_t nread;
+    nread = getline(&curr_line, &len, stdin);
+    return curr_line;
+}
+
+// Takes an input string (probably obtained by getline()), counts the number of whitespace delimited
+// elements, and returns an array of tokens pointing to each whitespace delimited element of the
+// input string.
+char** parse_input_line(char *curr_line, int *n_inputs) {
+    int index = 0;
+    // Start out with array capable of handling max input size in specs.
+    // The +7 is for possible non-arg elements.
+    char** inputs = malloc(MAX_ARGS + 7);
+    char* token;
+
+    // tokenize the input string and count the number of tokens
+    token = strtok(curr_line, DELIMITERS);
+    while (token != NULL) {
+        inputs[index] = token;
+        token = strtok(NULL, DELIMITERS);
+        index++;
+    }
+
+    // place value corresponding to number of tokens in integer pointed to by
+    *n_inputs = index;
+
+    // trim size of inputs (dynamic array of char pointers) to only whats's needed
+    inputs = realloc(inputs, index + 1);
+
+    // set final slement of inputs to NULL for compatibility with execvp
+    inputs[index] = NULL;
+
+    return(inputs);
 }
 
 void populate_command(struct command* curr_command, struct input* curr_input) {
@@ -149,47 +212,9 @@ void expand_var(struct command* curr_command, char* old_str, char* new_str) {
     }
 }
 
-// Read a line of input entered at command line, and return a pointer to dynamicall allocated memory
-// where this data are stored.
-char* get_input_line(void) {
-    char *curr_line = NULL;
-    size_t len = 0;
-    ssize_t nread;
-    nread = getline(&curr_line, &len, stdin);
-    return curr_line;
-}
 
-// Takes an input string (probably obtained by getline()), counts the number of whitespace delimited
-// elements, and returns an array of tokens pointing to each whitespace delimited element of the
-// input string.
-// REFERENCE: The general approach of this function is similar to the lsh_split_line function
-// provided by S. Brennan at: https://github.com/brenns10/lsh.
-// Use any whitespace as the delimters
-char** parse_input_line(char *curr_line, int *n_inputs) {
-    int index = 0;
-    // Start out with array capable of handling max input size specified in assignment
-    // The +7 is for possible non-arg elements.
-    char** inputs = malloc(MAX_ARGS + 7);
-    char* token;
 
-    // tokenize the input string and count the number of tokens
-    token = strtok(curr_line, DELIMITERS);
-    while (token != NULL) {
-        inputs[index] = token;
-        token = strtok(NULL, DELIMITERS);
-        index++;
-    }
 
-    // place value corresponding to number of tokens in integer pointed to by
-    *n_inputs = index;
-
-    // set trailing inputs (that we care about) to NULL. This may not be necessary since
-    // command.args is what gets passed to execvp (and it is forced to have trailing NULL),
-    // but leaving this here to be safe.
-    inputs[index] = NULL;
-
-    return inputs;
-}
 
 // checks if element of inputs is an output redirect symbol
 bool is_redirect_out(char* input) {

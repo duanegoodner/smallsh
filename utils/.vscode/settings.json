@@ -1,5 +1,4 @@
 {
-    // "files.exclude": {
-    //     "**/.o": true
-    // }
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs":"active"
 }

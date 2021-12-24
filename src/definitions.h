@@ -10,6 +10,7 @@
 
 #define MAX_CLL 2048
 #define MAX_ARGS 512
+#define MAX_EXTRA_WORDS 7
 
 #define REDIRECT_OUT ">"
 #define REDIRECT_IN "<"
