@@ -5,7 +5,7 @@
 
 /*.code-workspace
 
-/.vscode
+.vscode/
 
 *.log
 
