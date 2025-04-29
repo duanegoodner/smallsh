@@ -10,9 +10,6 @@
 *.log
 
 build/
-
 bin/
 obj/
-
-
 
