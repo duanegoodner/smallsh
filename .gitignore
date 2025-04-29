@@ -9,6 +9,10 @@
 
 *.log
 
+build/
+
+bin/
+obj/
 
 
 

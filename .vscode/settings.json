@@ -1,4 +1,5 @@
 {
+    "makefile.configureOnOpen": true
     // "files.exclude": {
     //     "**/.o": true
     // }
