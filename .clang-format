@@ -1,9 +1,8 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
 UseTab: Never
-ColumnLimit: 79
+ColumnLimit: 100
 AllowShortIfStatementsOnASingleLine: false
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Attach
 SortIncludes: true
 IncludeBlocks: Preserve
-Language: C

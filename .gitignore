@@ -1,15 +1,26 @@
-
-/debug
-
+# Build artifacts
+/build/
+/bin/
+/obj/
+/debug/
 *.o
 
-/*.code-workspace
-
+# Editor/workspace files
+*.code-workspace
 .vscode/
-
 *.log
 
-build/
-bin/
-obj/
+# Preserve VS Code settings under tools/
+!tools/
+!tools/*.code-workspace
+!tools/.vscode/
+!tools/.vscode/**
+
+# Mac/Linux hidden files
+.DS_Store
+
+# Backup & temp files
+*~
+*.swp
+*.bak
 

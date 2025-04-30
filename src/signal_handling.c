@@ -1,22 +1,20 @@
-#define _POSIX_C_SOURCE 200809L     // Enables full POSIX definitions
+#define _POSIX_C_SOURCE 200809L // Enables full POSIX definitions
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <signal.h>
-#include <string.h>       // for memset
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h> // for memset
+#include <sys/wait.h>
+#include <unistd.h>
 
-#include "globals.h"
 #include "definitions.h"
+#include "globals.h"
 #include "process_mgmt.h"
 #include "signal_handling.h"
 
-
-// handle SIGSTP by toggling global bg_launch_allowed on/off and reporting the change
-// to standard out.
-void handle_SIGTSTP (int signo) {
-
+// handle SIGSTP by toggling global bg_launch_allowed on/off and reporting the
+// change to standard out.
+void handle_SIGTSTP(int signo) {
     (void)signo;
 
     bg_launch_allowed = !bg_launch_allowed;
@@ -29,15 +27,14 @@ void handle_SIGTSTP (int signo) {
 }
 
 // handles SIGCHLD by checking for and removing zombie processes
-void handle_SIGCHLD (int signo) {
+void handle_SIGCHLD(int signo) {
     (void)signo;
     remove_zombies();
 }
 
 // sets signal handlers for the shell process
 void set_shell_sighandlers() {
-
-    //ignore SIGINT
+    // ignore SIGINT
     struct sigaction ignore_action;
     memset(&ignore_action, 0, sizeof(ignore_action));
     ignore_action.sa_handler = SIG_IGN;
