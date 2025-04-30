@@ -16,6 +16,9 @@
 // handle SIGSTP by toggling global bg_launch_allowed on/off and reporting the change
 // to standard out.
 void handle_SIGTSTP (int signo) {
+
+    (void)signo;
+
     bg_launch_allowed = !bg_launch_allowed;
     if (!bg_launch_allowed) {
         write(STDOUT_FILENO, ENTER_FG_ONLY_MSG, 50);
@@ -27,6 +30,7 @@ void handle_SIGTSTP (int signo) {
 
 // handles SIGCHLD by checking for and removing zombie processes
 void handle_SIGCHLD (int signo) {
+    (void)signo;
     remove_zombies();
 }
 
