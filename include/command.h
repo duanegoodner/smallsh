@@ -1,6 +1,7 @@
 
 #include "definitions.h"
 #include <stdbool.h>
+#include <sys/types.h>
 
 
 #ifndef THERE_IS_A_COMMAND

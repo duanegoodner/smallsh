@@ -1,70 +1,42 @@
-# Makefile template from: https://github.com/TheNetAdmin/Makefile-Templates
-
-# tool macros
+# Compiler and flags
 CC := gcc
-CCFLAGS :=
-DBGFLAGS := -g
-CCOBJFLAGS := $(CCFLAGS) -c
+CFLAGS := -Wall -Wextra -std=c99 -Iinclude
+DEBUG_FLAGS := -g
 
-# path macros
-BIN_PATH := bin
-OBJ_PATH := obj
-SRC_PATH := src
-DBG_PATH := debug
+# Directories
+SRC_DIR := src
+BUILD_DIR := build
+OBJ_DIR := $(BUILD_DIR)/obj
+BIN := $(BUILD_DIR)/smallsh
+DEBUG_BIN := $(BUILD_DIR)/smallsh_debug
 
-# compile macros
-TARGET_NAME := smallsh
-# ifeq ($(OS),Windows_NT)
-# 	TARGET_NAME := $(addsuffix .exe,$(TARGET_NAME))
-# endif
-TARGET := $(BIN_PATH)/$(TARGET_NAME)
-TARGET_DEBUG := $(DBG_PATH)/$(TARGET_NAME)
+# Source and object files
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-# src files & obj files
-SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c*)))
-OBJ := $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
-OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+# Default target
+all: $(BIN)
 
-# clean files list
-DISTCLEAN_LIST := $(OBJ) \
-                  $(OBJ_DEBUG)
-CLEAN_LIST := $(TARGET) \
-			  $(TARGET_DEBUG) \
-			  $(DISTCLEAN_LIST)
+# Build target
+$(BIN): $(OBJS)
+	@mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
-# default rule
-default: makedir all
+# Debug build
+debug: CFLAGS += $(DEBUG_FLAGS)
+debug: $(DEBUG_BIN)
 
-# non-phony targets
-$(TARGET): $(OBJ)
-	$(CC) $(CCFLAGS) -o $@ $(OBJ)
+$(DEBUG_BIN): $(OBJS)
+	@mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c*
-	$(CC) $(CCOBJFLAGS) -o $@ $<
+# Object file compilation
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(DBG_PATH)/%.o: $(SRC_PATH)/%.c*
-	$(CC) $(CCOBJFLAGS) $(DBGFLAGS) -o $@ $<
-
-$(TARGET_DEBUG): $(OBJ_DEBUG)
-	$(CC) $(CCFLAGS) $(DBGFLAGS) $(OBJ_DEBUG) -o $@
-
-# phony rules
-.PHONY: makedir
-makedir:
-	@mkdir -p $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
-
-.PHONY: all
-all: $(TARGET)
-
-.PHONY: debug
-debug: $(TARGET_DEBUG)
-
-.PHONY: clean
+# Clean build artifacts
 clean:
-	@echo CLEAN $(CLEAN_LIST)
-	@rm -f $(CLEAN_LIST)
+	rm -rf $(BUILD_DIR)
 
-.PHONY: distclean
-distclean:
-	@echo CLEAN $(CLEAN_LIST)
-	@rm -f $(DISTCLEAN_LIST)
+.PHONY: all debug clean

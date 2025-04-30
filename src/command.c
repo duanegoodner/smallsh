@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200809L     // Enables full POSIX definitions
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -84,6 +86,13 @@ char* get_input_line(void) {
     size_t len = 0;
     ssize_t nread;
     nread = getline(&curr_line, &len, stdin);
+
+    if (nread == -1) {
+        perror("getline");
+        free(curr_line); // avoid leak on error
+        return NULL;
+    }
+    
     return curr_line;
 }
 
