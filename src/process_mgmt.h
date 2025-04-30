@@ -6,7 +6,7 @@
 
 void killall_bgprocs(void);
 void remove_zombies(void);
-int redirect_ouptut(char* new_out_path);
+void redirect_output(char* new_out_path);
 void redirect_input(char* new_in_path);
 int launch_child_proc(struct command* curr_command);
 void set_bg_child_redirect(struct command* curr_command);

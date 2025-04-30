@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200809L     // Enables full POSIX definitions
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -31,7 +33,7 @@ bool potential_zombies = false;
 
 // sets the output redirect path of the process it is called within
 // REFERENCE: Used code provided in course module: https://canvas.oregonstate.edu/courses/1784217/modules/items/19893106
-int redirect_ouptut(char* new_out_path) {
+void redirect_output(char* new_out_path) {
     int out_fd = open(new_out_path, O_WRONLY | O_CREAT | O_TRUNC, 0640);
     if (out_fd == -1) {
         fprintf(stderr, "Failed open %s for output", new_out_path);
@@ -192,9 +194,9 @@ void remove_zombies(void) {
 #define DEFAULT_BG_REDIRECT "/dev/null"
 void set_bgchild_redirect(struct command *curr_command) {
     if (curr_command->output_redirect == NULL) {
-            redirect_ouptut(DEFAULT_BG_REDIRECT);
+            redirect_output(DEFAULT_BG_REDIRECT);
         } else {
-            redirect_ouptut(curr_command->output_redirect);
+            redirect_output(curr_command->output_redirect);
         }
         if (curr_command->input_redirect == NULL) {
             redirect_input(DEFAULT_BG_REDIRECT);
@@ -206,7 +208,7 @@ void set_bgchild_redirect(struct command *curr_command) {
 // sest foreground child process redirect if corresponding members of command struct not NULL
 void set_fgchild_redirect(struct command *curr_command) {
     if (curr_command->output_redirect != NULL) {
-            redirect_ouptut(curr_command->output_redirect);
+            redirect_output(curr_command->output_redirect);
         }
     if (curr_command->input_redirect != NULL) {
         redirect_input(curr_command->input_redirect);
