@@ -1,8 +1,8 @@
 # smallsh
 
-*A lightweight Linux shell implemented in C, mimicking essential features of Bash and Zsh.*
+*A lightweight Linux shell written in C, with built-in job control, redirection, and signal handling.*
 
----
+
 
 ## About
 
@@ -35,7 +35,11 @@ Clone the repository and build the project using `make`:
 make
 ```
 
-This will compile the source files and produce the `smallsh` executable.
+This will compile the project and produce the `smallsh` executable in the `build/` directory:
+
+ ```bash
+ ./build/smallsh
+ ```
 
 
 ## Usage
@@ -99,6 +103,94 @@ Use `exit` to terminate the shell.
   - In foreground-only mode, background execution requests (`&`) are ignored.
   - Toggle messages are displayed accordingly.
 - Shell and all child processes ignore SIGTSTP unless intended for toggling.
+
+
+
+### 🖥️ Demo
+
+```bash
+$ ./build/smallsh
+: echo hello world
+hello world
+
+: pwd
+/home/user/smallsh
+
+: sleep 5 &
+background pid is 38241
+
+: ls > files.txt
+
+: status
+exit value 0
+
+: cat < files.txt
+Makefile
+README.md
+src
+include
+
+: ^C
+terminated by signal 2
+
+: sleep 100
+^C
+terminated by signal 2
+
+: # Entering foreground-only mode with Ctrl+Z
+Entering foreground-only mode (& is now ignored)
+
+: sleep 5 &
+Ignoring background execution (&) due to foreground-only mode
+
+: # Exiting foreground-only mode with Ctrl+Z again
+Exiting foreground-only mode
+
+: exit
+$
+```
+
+
+
+### Project Structure
+
+Project Structure:
+
+.
+├── include/        # Header files (e.g., .h)
+│   ├── built_ins.h
+│   ├── command.h
+│   ├── definitions.h
+│   ├── globals.h
+│   ├── process_mgmt.h
+│   ├── signal_handling.h
+│   └── utilities.h
+├── src/            # Source files (e.g., .c)
+│   ├── built_ins.c
+│   ├── command.c
+│   ├── main.c
+│   ├── process_mgmt.c
+│   ├── signal_handling.c
+│   └── utilities.c
+├── build/          # Compiled binary and object files
+│   ├── obj/
+│   └── smallsh
+├── test/           # Testing scripts and test results
+│   ├── p3testscript
+│   └── results/
+│       ├── final-os1-test
+│       └── local-final-test
+├── tools/          # Editor configuration (e.g., for VS Code)
+│   └── smallsh.code-workspace
+│   └── .vscode/
+│       ├── c_cpp_properties.json
+│       ├── launch.json
+│       ├── settings.json
+│       └── tasks.json
+├── Makefile        # Build instructions
+├── README.md       # Updated project documentation
+└── README-old.md   # Legacy README retained for reference
+
 
 
 ## References
