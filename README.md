@@ -148,6 +148,7 @@ Exiting foreground-only mode
 
 : exit
 $
+
 ```
 
 
@@ -155,7 +156,7 @@ $
 ### Project Structure
 
 Project Structure:
-
+```
 .
 ├── include/        # Header files (e.g., .h)
 │   ├── built_ins.h
@@ -190,6 +191,7 @@ Project Structure:
 ├── Makefile        # Build instructions
 ├── README.md       # Updated project documentation
 └── README-old.md   # Legacy README retained for reference
+```
 
 
 
